@@ -1,12 +1,19 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser
+
+
+class Account(AbstractUser):
+    mobile_number = models.CharField(max_length=20, null=True, blank=True, verbose_name='Номер телефона')
+#     TODO связать user'а с купленными им треками
+    coupons = models.CharField(max_length=30, null=True, blank=True, verbose_name='Купоны')
 
 
 class Track(models.Model):
     author = models.CharField(max_length=150, null=True, blank=True, verbose_name='Автор')
     title = models.CharField(max_length=150, null=True, blank=True, verbose_name='Название трека')
     sport_name = models.CharField(max_length=150, null=True, blank=True, verbose_name='Вид спорта')
-    price = models.IntegerField(max_length=25, null=True, blank=True, verbose_name='Цена')
+    price = models.IntegerField(null=True, blank=True, verbose_name='Цена')
     beginning_peak = models.BooleanField(blank=True, verbose_name='Пик в начале')
     # TODO посмотреть че за Choices('Плавное' или 'резкое')
     # end = models.Choices(verbose_name='Окончание')
@@ -16,4 +23,43 @@ class Track(models.Model):
     # add_track = models.
     sportsman_name = models.CharField(max_length=100, null=True, blank=True, verbose_name='Имя спортсмена')
     photo = models.CharField(max_length=150, null=True, blank=True, verbose_name='Фото')
-    track_length = models.IntegerField(max_length=150, null=True, blank=True, verbose_name='Длительность трека')
+    track_length = models.IntegerField(null=True, blank=True, verbose_name='Длительность трека')
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        ordering = ['id']
+        verbose_name = 'Трек'
+        verbose_name_plural = 'Треки'
+
+
+class Coupons(models.Model):
+    # TODO Привязка к id user'a
+    validity_period = models.CharField(max_length=20, null=True, blank=True, verbose_name='Срок действия')
+    # TODO models.Choices \/
+    # status = models.Choices
+
+    def __str__(self):
+        return self.status
+
+    class Meta:
+        ordering = ['id']
+        verbose_name = 'Трек'
+        verbose_name_plural = 'Треки'
+
+
+class Order(models.Model):
+    order_number = models.CharField(max_length=10, null=True, blank=True, verbose_name='Номер заказа')
+    order_date = models.DateField(auto_now_add=True, verbose_name='Дата заказа')
+    # TODO Choices \/
+    # status = models.Choices()
+    price = models.IntegerField(null=True, blank=True, verbose_name='Стоимость')
+
+    def __str__(self):
+        return self.order_number
+
+    class Meta:
+        ordering = ['id']
+        verbose_name = 'Заказ'
+        verbose_name_plural = 'Заказы'
