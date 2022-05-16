@@ -1,12 +1,14 @@
 from django.db import models
-from django.contrib.auth.models import User
 from django.contrib.auth.models import AbstractUser
 
 
-class Account(AbstractUser):
+class User(AbstractUser):
     mobile_number = models.CharField(max_length=20, null=True, blank=True, verbose_name='Номер телефона')
-#     TODO связать user'а с купленными им треками
+    #     TODO связать user'а с купленными им треками
     coupons = models.CharField(max_length=30, null=True, blank=True, verbose_name='Купоны')
+
+    def __str__(self):
+        return self.username
 
 
 class Track(models.Model):
@@ -14,7 +16,7 @@ class Track(models.Model):
     title = models.CharField(max_length=150, null=True, blank=True, verbose_name='Название трека')
     sport_name = models.CharField(max_length=150, null=True, blank=True, verbose_name='Вид спорта')
     price = models.IntegerField(null=True, blank=True, verbose_name='Цена')
-    beginning_peak = models.BooleanField(blank=True, verbose_name='Пик в начале')
+    beginning_peak = models.BooleanField(default=True, verbose_name='Пик в начале')
     # TODO посмотреть че за Choices('Плавное' или 'резкое')
     # end = models.Choices(verbose_name='Окончание')
     # 'На концетрацию', 'На выносливость', 'На силу и преодоление'

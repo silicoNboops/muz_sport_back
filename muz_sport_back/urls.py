@@ -16,6 +16,9 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+# from muzsport.views import TrackAPIView
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+    # path('tracks/', TrackAPIView.as_view())
 ]

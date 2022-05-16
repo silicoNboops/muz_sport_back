@@ -70,11 +70,12 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authentication',
     'muzsport.apps.MuzsportConfig',
-
 #custom
     'drf_yasg',
     'django_filters',
 ]
+
+AUTH_USER_MODEL = 'muzsport.User'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -113,7 +114,7 @@ WSGI_APPLICATION = 'muz_sport_back.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
 
