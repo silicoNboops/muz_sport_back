@@ -70,6 +70,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authentication',
     'muzsport.apps.MuzsportConfig',
+
 #custom
     'drf_yasg',
     'django_filters',
