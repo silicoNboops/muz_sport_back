@@ -13,8 +13,6 @@ SECRET_KEY = env('SECRET_KEY')
 DEBUG = env('DEBUG')
 ALLOWED_HOSTS = ['*']
 
-
-
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=30),
     'REFRESH_TOKEN_LIFETIME': timedelta(weeks=50),
@@ -69,14 +67,14 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework.authentication',
-    'muzsport.apps.MuzsportConfig',
 
 #custom
     'drf_yasg',
     'django_filters',
+    'rest_framework_simplejwt',
+    'auth_app',
 ]
 
-AUTH_USER_MODEL = 'muzsport.User'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
