@@ -42,6 +42,10 @@ class Coupons(models.Model):
 
 
 class Order(models.Model):
+    name = models.CharField(max_length=20, null=True, blank=True, verbose_name='Имя заказчика')
+    last_name = models.CharField(max_length=20, null=True, blank=True, verbose_name='Фамилия заказчика')
+    phone = models.CharField(max_length=30, null=True, blank=True, verbose_name='Номер телефона')
+    email = models.CharField(max_length=256, null=True, blank=True, verbose_name='E-Mail')
     order_number = models.CharField(max_length=10, null=True, blank=True, verbose_name='Номер заказа')
     order_date = models.DateField(auto_now_add=True, verbose_name='Дата заказа')
     # TODO Choices \/
