@@ -6,6 +6,7 @@ from muzsport.serializers import OrderSerializers
 
 
 class OrderViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsAuthenticated]
+    # TODO isAuthenticated не позволяет сделать заказ неавторизованным лицам. Нужен ли он? Если закоментить, order робит
+    # permission_classes = [IsAuthenticated]
     serializer_class = OrderSerializers
     queryset = Order.objects.all()

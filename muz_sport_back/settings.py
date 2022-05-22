@@ -62,7 +62,7 @@ CORS_ORIGIN_ALLOW_ALL = False
 # CORS_ALLOW_ALL_ORIGINS: True
 
 # TODO спросить у макса, что убирать на локалхосте (вроде ток это)
-CORS_ORIGIN_WHITELIST = ('http://localhost:8000',)
+CORS_ORIGIN_WHITELIST = ('http://localhost:3000',)
 CORS_ALLOW_CREDENTIALS = True
 
 CORS_ALLOW_METHODS = [
