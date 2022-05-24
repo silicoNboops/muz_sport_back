@@ -1,12 +1,38 @@
 from rest_framework import viewsets
-from rest_framework.permissions import IsAuthenticated
+from muzsport.models import *
+from muzsport.serializers import *
+from django_filters.rest_framework import DjangoFilterBackend
 
-from muzsport.models import Order
-from muzsport.serializers import OrderSerializers
+
+class SportsReadOnlyModelViewSet(viewsets.ReadOnlyModelViewSet):
+    serializer_class = TrackSerializers
+    queryset = Track.objects.all()
+
+
+class TagsReadOnlyModelViewSet(viewsets.ReadOnlyModelViewSet):
+    serializer_class = TrackSerializers
+    queryset = Track.objects.all()
+
+
+class MoodsReadOnlyModelViewSet(viewsets.ReadOnlyModelViewSet):
+    serializer_class = TrackSerializers
+    queryset = Track.objects.all()
+
+
+class CountryReadOnlyModelViewSet(viewsets.ReadOnlyModelViewSet):
+    serializer_class = TrackSerializers
+    queryset = Track.objects.all()
 
 
 class OrderViewSet(viewsets.ModelViewSet):
-    # TODO isAuthenticated не позволяет сделать заказ неавторизованным лицам. Нужен ли он? Если закоментить, order робит
-    # permission_classes = [IsAuthenticated]
     serializer_class = OrderSerializers
     queryset = Order.objects.all()
+
+
+class TrackReadOnlyModelViewSet(viewsets.ReadOnlyModelViewSet):
+    serializer_class = TrackSerializers
+    queryset = Track.objects.all()
+
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['sports_name', 'tag_name', 'mood_name', 'country_name', 'with_words']
+
