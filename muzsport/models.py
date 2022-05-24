@@ -47,7 +47,7 @@ class Country(models.Model):
 
 class Track(models.Model):
     file = models.FileField(null=True, blank=True, upload_to="mp4", verbose_name='Трэк')
-    photo = models.ImageField(upload_to='track_images/', height_field=None, width_field=None, max_length=100)
+    photo = models.ImageField(upload_to='track_images/', height_field=None, width_field=None, verbose_name='Фото')
     author = models.CharField(max_length=150, null=True, blank=True, verbose_name='Автор')
     title = models.CharField(max_length=150, null=True, blank=True, verbose_name='Название трека')
     price = models.IntegerField(null=True, blank=True, verbose_name='Цена')
