@@ -19,8 +19,8 @@ class Tags(models.Model):
         return str(self.tag_name)
 
     class Meta:
-        verbose_name = 'Хэштеги'
-        verbose_name_plural = 'Хэштег'
+        verbose_name = 'Хэштег'
+        verbose_name_plural = 'Хэштегb'
 
 
 class Moods(models.Model):
@@ -30,8 +30,8 @@ class Moods(models.Model):
         return str(self.mood_name)
 
     class Meta:
-        verbose_name = 'Настроения'
-        verbose_name_plural = 'Настроение'
+        verbose_name = 'Настроение'
+        verbose_name_plural = 'Настроения'
 
 
 class Country(models.Model):
@@ -41,8 +41,8 @@ class Country(models.Model):
         return str(self.country_name)
 
     class Meta:
-        verbose_name = 'Страны'
-        verbose_name_plural = 'Страна'
+        verbose_name = 'Страна'
+        verbose_name_plural = 'Страны'
 
 
 class Track(models.Model):
