@@ -88,7 +88,7 @@ class Order(models.Model):
     order_date = models.DateField(auto_now_add=True, verbose_name='Дата заказа')
     price = models.IntegerField(null=True, blank=True, verbose_name='Стоимость')
     # TODO спросить у Макса про реализацию этой штуки \/
-    end = models.CharField(verbose_name='Окончание')
+    end = models.CharField(max_length=20, verbose_name='Окончание')
     beginning_peak = models.BooleanField(verbose_name='Пик в начале')
     products = models.TextField(max_length=10000, verbose_name='Товары', blank=True, null=True)
 
