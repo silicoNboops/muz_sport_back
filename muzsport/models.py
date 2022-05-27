@@ -20,7 +20,7 @@ class Tags(models.Model):
 
     class Meta:
         verbose_name = 'Хэштег'
-        verbose_name_plural = 'Хэштегb'
+        verbose_name_plural = 'Хэштеги'
 
 
 class Moods(models.Model):
@@ -87,6 +87,10 @@ class Order(models.Model):
     email = models.CharField(max_length=256, null=True, blank=True, verbose_name='E-Mail')
     order_date = models.DateField(auto_now_add=True, verbose_name='Дата заказа')
     price = models.IntegerField(null=True, blank=True, verbose_name='Стоимость')
+    # TODO спросить у Макса про реализацию этой штуки \/
+    end = models.CharField(verbose_name='Окончание')
+    beginning_peak = models.BooleanField(verbose_name='Пик в начале')
+    products = models.TextField(max_length=10000, verbose_name='Товары', blank=True, null=True)
 
     def __str__(self):
         return str(self.order_number)
