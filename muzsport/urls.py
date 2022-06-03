@@ -16,6 +16,6 @@ urlpatterns = [
     path('country/<int:pk>/', CountryReadOnlyModelViewSet.as_view({'get': 'retrieve'})),
     path('order/', OrderViewSet.as_view({'get': 'list'})),
     path('order/<int:pk>/', OrderViewSet.as_view({'get': 'retrieve'})),
-    path('coupon/<name>', views.coupon_api),
+    path('coupon/<str:coupon_name>', CouponsViewSet.as_view({'get': 'retrieve'})),
     path('order/create/', OrderViewSet.as_view({'post': 'create'})),
 ]

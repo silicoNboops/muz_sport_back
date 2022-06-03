@@ -26,6 +26,4 @@ urlpatterns = [
     path('auth/', include("djoser.urls.authtoken")),
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('', include('muzsport.urls')),
-    path('coupon/<str:coupon_name>', CouponsViewSet.as_view({'get': 'retrieve'})),
-
 ]
