@@ -1,5 +1,6 @@
 from django.urls import path
 
+from muzsport import views
 from muzsport.views import *
 
 urlpatterns = [
@@ -15,5 +16,6 @@ urlpatterns = [
     path('country/<int:pk>/', CountryReadOnlyModelViewSet.as_view({'get': 'retrieve'})),
     path('order/', OrderViewSet.as_view({'get': 'list'})),
     path('order/<int:pk>/', OrderViewSet.as_view({'get': 'retrieve'})),
+    path('coupon/<name>', views.coupon_api),
     path('order/create/', OrderViewSet.as_view({'post': 'create'})),
 ]

@@ -44,3 +44,4 @@ class CouponsViewSet(viewsets.ModelViewSet):
     serializer_class = CouponsSerializers
     queryset = Coupons.objects.all()
     lookup_field = 'coupon_name'
+
