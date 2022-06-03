@@ -1,4 +1,7 @@
+from django.views.decorators.csrf import csrf_exempt
 from rest_framework import viewsets
+from rest_framework.parsers import JSONParser
+
 from muzsport.models import *
 from muzsport.serializers import *
 from django_filters.rest_framework import DjangoFilterBackend
@@ -36,3 +39,8 @@ class TrackReadOnlyModelViewSet(viewsets.ReadOnlyModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['sports_name', 'tag_name', 'mood_name', 'country_name', 'with_words']
 
+
+class CouponsViewSet(viewsets.ModelViewSet):
+    serializer_class = CouponsSerializers
+    queryset = Coupons.objects.all()
+    lookup_field = 'coupon_name'
