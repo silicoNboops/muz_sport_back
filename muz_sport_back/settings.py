@@ -61,8 +61,8 @@ ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'ovz1.kupalex.n03kn.vps.myjino.ru']
 CORS_ORIGIN_ALLOW_ALL = False
 # CORS_ALLOW_ALL_ORIGINS: True
 
-# TODO спросить у макса, что убирать на локалхосте (вроде ток это)
-CORS_ORIGIN_WHITELIST = ('http://localhost:3000',)
+# СЮДА ТОЖ НАДО ВПИСЫВАТЬ ИХ
+CORS_ORIGIN_WHITELIST = ('http://localhost:3000', 'http://localhost:8000')
 CORS_ALLOW_CREDENTIALS = True
 
 CORS_ALLOW_METHODS = [
