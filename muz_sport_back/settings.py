@@ -62,7 +62,8 @@ CORS_ORIGIN_ALLOW_ALL = False
 # CORS_ALLOW_ALL_ORIGINS: True
 
 # СЮДА ТОЖ НАДО ВПИСЫВАТЬ ИХ
-CORS_ORIGIN_WHITELIST = ('http://localhost:3000', 'http://localhost:8000')
+CORS_ORIGIN_WHITELIST = ('http://localhost:3000', 'http://localhost:8000',
+                         'http://ovz1.kupalex.n03kn.vps.myjino.ru')
 CORS_ALLOW_CREDENTIALS = True
 
 CORS_ALLOW_METHODS = [
