@@ -81,21 +81,56 @@ class Coupons(models.Model):
 
 
 class Order(models.Model):
-    name = models.CharField(max_length=20, null=True, blank=True, verbose_name='Имя заказчика')
-    last_name = models.CharField(max_length=20, null=True, blank=True, verbose_name='Фамилия заказчика')
-    phone = models.CharField(max_length=30, null=True, blank=True, verbose_name='Номер телефона')
-    email = models.CharField(max_length=256, null=True, blank=True, verbose_name='E-Mail')
-    order_date = models.DateField(auto_now_add=True, verbose_name='Дата заказа')
-    price = models.IntegerField(null=True, blank=True, verbose_name='Стоимость')
-    # TODO спросить у Макса про реализацию этой штуки \/
-    end = models.CharField(max_length=20, verbose_name='Окончание')
+    time_begin = models.TimeField(null=True, blank=True, auto_now=False, auto_now_add=False,
+                                   verbose_name='Начало хронометража')
+    time_end = models.TimeField(null=True, blank=True, auto_now=False, auto_now_add=False,
+                                 verbose_name='Конец хронометража')
     beginning_peak = models.BooleanField(verbose_name='Пик в начале')
-    products = models.TextField(max_length=10000, verbose_name='Товары', blank=True, null=True)
+    ending = models.BooleanField(verbose_name='Окончание плавное') # плавное или резкое
+    is_auto_layout = models.BooleanField(verbose_name='Автоматическа компоновка?')  # Авто или ручное
+    comment_for_product = models.CharField(max_length=250, verbose_name='Коментарий к продукту', blank=True, null=True)
 
     def __str__(self):
-        return str(self.order_number)
+        return str(self.id)
 
     class Meta:
         verbose_name = 'Заказ'
         verbose_name_plural = 'Заказы'
 
+
+class OrderSegmentDelete(models.Model):
+    time_delete_begin = models.TimeField(null=True, blank=True, auto_now=False, auto_now_add=False,
+                                         verbose_name='Начало хронометража')
+    time_delete_end = models.TimeField(null=True, blank=True, auto_now=False, auto_now_add=False,
+                                        verbose_name='Конец хронометража')
+
+    def __str__(self):
+        return str(self.id)
+
+    class Meta:
+        verbose_name = 'Таймер удаления'
+        verbose_name_plural = 'Таймеры удалений'
+
+
+class OrderSegmentAdd(models.Model):
+    time_add_begin = models.TimeField(null=True, blank=True, auto_now=False, auto_now_add=False,
+                                       verbose_name='Начало хронометража')
+    time_add_end = models.TimeField(null=True, blank=True, auto_now=False, auto_now_add=False,
+                                     verbose_name='Конец хронометража')
+    time_insert = models.TimeField(null=True, blank=True, auto_now=False, auto_now_add=False,
+                                    verbose_name='Вставить в')
+
+    def __str__(self):
+        return str(self.id)
+
+    class Meta:
+        verbose_name = 'Таймер добавления'
+        verbose_name_plural = 'Таймеры добавлений'
+
+
+"""
+    name = models.CharField(max_length=20, null=True, blank=True, verbose_name='Имя заказчика')
+    last_name = models.CharField(max_length=20, null=True, blank=True, verbose_name='Фамилия заказчика')
+    phone = models.CharField(max_length=30, null=True, blank=True, verbose_name='Номер телефона')
+    email = models.CharField(max_length=256, null=True, blank=True, verbose_name='E-Mail')
+"""

@@ -40,8 +40,19 @@ class TrackReadOnlyModelViewSet(viewsets.ReadOnlyModelViewSet):
     filterset_fields = ['sports_name', 'tag_name', 'mood_name', 'country_name', 'with_words']
 
 
+<<<<<<< Updated upstream
 class CouponsViewSet(viewsets.ModelViewSet):
     serializer_class = CouponsSerializers
     queryset = Coupons.objects.all()
     lookup_field = 'coupon_name'
 
+=======
+class OrderSegmentDeleteViewSet(viewsets.ModelViewSet):
+    serializer_class = OrderSegmentDeleteSerializers
+    queryset = OrderSegmentDelete.objects.all()
+
+
+class OrderSegmentAddViewSet(viewsets.ModelViewSet):
+    serializer_class = OrderSegmentAddSerializers
+    queryset = OrderSegmentAdd.objects.all()
+>>>>>>> Stashed changes

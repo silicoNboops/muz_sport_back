@@ -18,4 +18,6 @@ urlpatterns = [
     path('order/<int:pk>/', OrderViewSet.as_view({'get': 'retrieve'})),
     path('coupon/<str:coupon_name>', CouponsViewSet.as_view({'get': 'retrieve'})),
     path('order/create/', OrderViewSet.as_view({'post': 'create'})),
+    path('order/segment/delete/', OrderSegmentDeleteViewSet.as_view({'post': 'create'})),
+    path('order/segment/add/', OrderSegmentAddViewSet.as_view({'post': 'create'})),
 ]

@@ -10,4 +10,6 @@ admin.site.register(Sports)
 admin.site.register(Tags)
 admin.site.register(Moods)
 admin.site.register(Country)
+admin.site.register(OrderSegmentDelete)
+admin.site.register(OrderSegmentAdd)
 
