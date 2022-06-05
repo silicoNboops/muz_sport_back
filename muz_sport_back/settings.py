@@ -65,8 +65,8 @@ CORS_ORIGIN_ALLOW_ALL = False
 CORS_ORIGIN_WHITELIST = ('http://localhost:3000', 'http://localhost:8000',
                          'http://ovz1.kupalex.n03kn.vps.myjino.ru:8000',
                          'http://81.177.165.19:8000',
-                         'http://ovz1.kupalex.n03kn.vps.myjino.ru:49192'
-                         'http://ovz1.kupalex.n03kn.vps.myjino.ru:8000')
+                         'http://ovz1.kupalex.n03kn.vps.myjino.ru:49192',
+                         'http://ovz1.kupalex.n03kn.vps.myjino.ru')
 CORS_ALLOW_CREDENTIALS = True
 
 CORS_ALLOW_METHODS = [
