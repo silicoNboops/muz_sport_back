@@ -57,7 +57,7 @@ DJOSER = {
     'SERIALIZERS': {},
 }
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'ovz1.kupalex.n03kn.vps.myjino.ru']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'ovz1.kupalex.n03kn.vps.myjino.ru', '81.177.165.19']
 CORS_ORIGIN_ALLOW_ALL = False
 # CORS_ALLOW_ALL_ORIGINS: True
 
