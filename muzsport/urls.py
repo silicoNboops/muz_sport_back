@@ -20,4 +20,8 @@ urlpatterns = [
     path('order/create/', OrderViewSet.as_view({'post': 'create'})),
     path('order/segment/delete/', OrderSegmentDeleteViewSet.as_view({'post': 'create'})),
     path('order/segment/add/', OrderSegmentAddViewSet.as_view({'post': 'create'})),
+    path('wishlist/', WishlistModelViewSet.as_view({'get': 'list'})),
+    path('wishlist/<int:pk>/', WishlistModelViewSet.as_view({'get': 'retrieve'})),
+    path('wishlist/create/', WishlistModelViewSet.as_view({'post': 'create'})),
+    path('wishlist/delete/', WishlistModelViewSet.as_view({'delete': 'destroy'}))
 ]

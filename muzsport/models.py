@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 
 class Sports(models.Model):
@@ -153,6 +154,20 @@ class AdSmallPhotoFile(models.Model):
     class Meta:
         verbose_name = 'Маленькая реклама'
         verbose_name_plural = 'Маленькие рекламы'
+
+
+
+class Wishlist(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    wished_track = models.ForeignKey(Track, on_delete=models.CASCADE)
+
+    class Meta:
+        verbose_name = 'Закладки'
+        verbose_name_plural = 'Закладки'
+        unique_together = (('user', 'wished_track'),)
+
+    def __str__(self):
+        return f"{self.user} {self.wished_track}"
 
 
 """

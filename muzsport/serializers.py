@@ -68,6 +68,32 @@ class AdSmallPhotoFileSerializers(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class WishlistSerializers(serializers.ModelSerializer):
+
+    user = serializers.PrimaryKeyRelatedField(read_only=True)
+    wished_track = TrackSerializers()
+
+    class Meta:
+        model = Wishlist
+        fields = '__all__'
+
+
+class WishlistCreateSerializers(serializers.ModelSerializer):
+
+    user = serializers.PrimaryKeyRelatedField(read_only=True)
+    wished_track = serializers.PrimaryKeyRelatedField(read_only=True)
+
+    class Meta:
+        model = Wishlist
+        fields = '__all__'
+
+
+class WishlistDeleteSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = Wishlist
+        fields = '__all__'
+
+
 # class ProductListSerializers(serializers.ModelSerializer):
 #     model = Track, Sports, Moods, Tags, Order
 #     fields = '__all__'

@@ -7,8 +7,8 @@ from django.contrib.auth.models import Group
 #     fields = ['file', 'photo', 'title', 'price']
 #     list_filter = ['title']
 #
-
 # admin.site.register(Track, TrackAdmin)
+
 admin.site.register(AdBigPhotoFile)
 admin.site.register(AdSmallPhotoFile)
 admin.site.register(Track)
@@ -21,6 +21,7 @@ admin.site.register(Moods)
 admin.site.register(Country)
 admin.site.register(OrderSegmentDelete)
 admin.site.register(OrderSegmentAdd)
+admin.site.register(Wishlist)
 
 
 
