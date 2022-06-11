@@ -54,3 +54,13 @@ class OrderSegmentDeleteViewSet(viewsets.ModelViewSet):
 class OrderSegmentAddViewSet(viewsets.ModelViewSet):
     serializer_class = OrderSegmentAddSerializers
     queryset = OrderSegmentAdd.objects.all()
+
+
+class AdBigPhotoFileViewSet(viewsets.ModelViewSet):
+    serializer_class = AdBigPhotoFileSerializers
+    queryset = AdBigPhotoFile.objects.all()
+
+
+class AdSmallPhotoFileViewSet(viewsets.ModelViewSet):
+    serializer_class = AdSmallPhotoFileSerializers
+    queryset = AdSmallPhotoFile.objects.all()

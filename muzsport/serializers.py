@@ -56,6 +56,18 @@ class OrderSegmentAddSerializers(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class AdBigPhotoFileSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = AdBigPhotoFile
+        fields = '__all__'
+
+
+class AdSmallPhotoFileSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = AdSmallPhotoFile
+        fields = '__all__'
+
+
 # class ProductListSerializers(serializers.ModelSerializer):
 #     model = Track, Sports, Moods, Tags, Order
 #     fields = '__all__'

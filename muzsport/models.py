@@ -102,7 +102,7 @@ class OrderSegmentDelete(models.Model):
     time_delete_begin = models.TimeField(null=True, blank=True, auto_now=False, auto_now_add=False,
                                          verbose_name='Начало хронометража')
     time_delete_end = models.TimeField(null=True, blank=True, auto_now=False, auto_now_add=False,
-                                        verbose_name='Конец хронометража')
+                                         verbose_name='Конец хронометража')
 
     def __str__(self):
         return str(self.id)
@@ -126,6 +126,33 @@ class OrderSegmentAdd(models.Model):
     class Meta:
         verbose_name = 'Таймер добавления'
         verbose_name_plural = 'Таймеры добавлений'
+
+
+class AdBigPhotoFile(models.Model):
+    photo = models.ImageField(upload_to='ad_big_photo_images/', height_field=None, width_field=None, verbose_name='Фото')
+    ad_period = models.DateField(null=True, blank=True, verbose_name='Срок рекламы')
+    published = models.BooleanField(verbose_name='Опубликовано')
+
+    def __str__(self):
+        return str(self.ad_period)
+
+    class Meta:
+        verbose_name = 'Большая реклама'
+        verbose_name_plural = 'Большие рекламы'
+
+
+class AdSmallPhotoFile(models.Model):
+    photo = models.ImageField(upload_to='ad_small_photo_images/', height_field=None, width_field=None,
+                              verbose_name='Фото')
+    ad_period = models.DateField(null=True, blank=True, verbose_name='Срок рекламы')
+    published = models.BooleanField(verbose_name='Опубликовано')
+
+    def __str__(self):
+        return str(self.ad_period)
+
+    class Meta:
+        verbose_name = 'Маленькая реклама'
+        verbose_name_plural = 'Маленькие рекламы'
 
 
 """
