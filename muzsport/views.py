@@ -1,6 +1,7 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets
 from rest_framework.exceptions import NotFound, AuthenticationFailed
+from rest_framework.filters import SearchFilter
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 
@@ -36,8 +37,9 @@ class TrackReadOnlyModelViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = TrackSerializers
     queryset = Track.objects.all()
 
-    filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['sports_name', 'tag_name', 'mood_name', 'country_name', 'with_words']
+    filter_backends = [DjangoFilterBackend, SearchFilter]
+    filterset_fields = ['sports_name', 'tag_name', 'mood_name', 'with_words', 'country_name']
+    search_fields = ['author', 'title']
 
 
 class CouponsViewSet(viewsets.ModelViewSet):
