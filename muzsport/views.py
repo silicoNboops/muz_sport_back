@@ -11,6 +11,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 
 from muzsport.serializers import *
+from muzsport.service import TracksFilter, TracksPagination
 
 
 class SportsReadOnlyModelViewSet(viewsets.ReadOnlyModelViewSet):
@@ -45,6 +46,41 @@ class TrackReadOnlyModelViewSet(viewsets.ReadOnlyModelViewSet):
     filter_backends = [DjangoFilterBackend, SearchFilter]
     filterset_fields = ['sports_name', 'tag_name', 'mood_name', 'with_words', 'country_name']
     search_fields = ['author', 'title']
+    filterset_class = TracksFilter
+    pagination_class = TracksPagination
+
+    def get_queryset(self):
+        # radius = self.request.query_params.get('radius')
+
+        pk = self.kwargs.get('pk')
+
+        if not pk:
+            filter_kwargs = []
+
+            for item in self.request.query_params.items():
+                # TODO продумать как для related полей делать проверку чтоб добавлять title к ним
+                if not item[0] == 'page':
+                    if item[0] == 'type':
+                        filter_kwargs.append(Q(**{f'{item[0]}__title': item[1]}))
+                    else:
+                        filter_kwargs.append(Q(**{item[0]: item[1]}))
+
+            # TODO выводим все (не только опубликованные)
+            # filter_kwargs.append(Q(**{'is_published': True}))
+
+            if filter_kwargs:
+                products = Track.objects.filter(reduce(lambda a, b: a & b, filter_kwargs))
+            else:
+                products = Track.objects.all()
+
+            return products
+
+        # queryset должен возвращать список, а фильтр тоже всегда возвращает список
+        return Track.objects.filter(pk=pk)
+
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return TrackSerializers
 
 
 class CouponsViewSet(viewsets.ModelViewSet):
