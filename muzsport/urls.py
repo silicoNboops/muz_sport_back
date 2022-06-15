@@ -9,6 +9,8 @@ from muzsport.views import *
 urlpatterns = [
     path('tracks/', TrackReadOnlyModelViewSet.as_view({'get': 'list'})),
     path('tracks/<int:pk>/', TrackReadOnlyModelViewSet.as_view({'get': 'retrieve'})),
+    path('tracks/filtersAll', views.track_fields_values),
+    path('tracks/filter', views.track_filtered),
     path('sports/', SportsReadOnlyModelViewSet.as_view({'get': 'list'})),
     path('sports/<int:pk>/', SportsReadOnlyModelViewSet.as_view({'get': 'retrieve'})),
     path('tags/', TagsReadOnlyModelViewSet.as_view({'get': 'list'})),
@@ -29,6 +31,7 @@ urlpatterns = [
     path('wishlist/delete/', WishlistModelViewSet.as_view({'delete': 'destroy'})),
     path('adbig/', AdBigPhotoFileViewSet.as_view({'get': 'list'})),
     path('adsmall/', AdSmallPhotoFileViewSet.as_view({'get': 'list'})),
+
 ]
 
 if settings.DEBUG:

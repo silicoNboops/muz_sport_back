@@ -26,10 +26,23 @@ class CountrySerializers(serializers.ModelSerializer):
         fields = '__all__'
 
 
+# class ReturnSportsNameSerializer(serializers.RelatedField):
+#     def to_representation(self, field_id):
+#         return field_id.sports_name
+
+
 class TrackSerializers(serializers.ModelSerializer):
+    # sports_name = SlugRelatedField(read_only=True, slug_field='name')
+
     class Meta:
         model = Track
         fields = '__all__'
+
+    def to_representation(self, instance):
+        rep = super(TrackSerializers, self).to_representation(instance)
+        rep['sports_name'] = instance.sports_name.sports_name
+        rep['country_name'] = instance.country_name.country_name
+        return rep
 
 
 class CouponsSerializers(serializers.ModelSerializer):

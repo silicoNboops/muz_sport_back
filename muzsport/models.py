@@ -54,7 +54,7 @@ class Track(models.Model):
     price = models.IntegerField(null=True, blank=True, verbose_name='Цена')
     track_length = models.IntegerField(null=True, blank=True, verbose_name='Длительность трека')
     sports_name = models.ForeignKey(Sports, on_delete=models.CASCADE, verbose_name='Наименование спорта')
-    tag_name = models.ManyToManyField('Tags', verbose_name='Хэштег')
+    tag_name = models.ManyToManyField('Tags', verbose_name='Хэштег', )
     mood_name = models.ManyToManyField('Moods', verbose_name='Настроение')
     country_name = models.ForeignKey(Country, on_delete=models.CASCADE, verbose_name='Страна')
     with_words = models.BooleanField(default=False, verbose_name='Со словами?')
@@ -154,7 +154,6 @@ class AdSmallPhotoFile(models.Model):
     class Meta:
         verbose_name = 'Маленькая реклама'
         verbose_name_plural = 'Маленькие рекламы'
-
 
 
 class Wishlist(models.Model):

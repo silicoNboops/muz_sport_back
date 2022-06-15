@@ -1,3 +1,8 @@
+from functools import reduce
+
+from django.db.models import Q, ForeignKey
+from django.forms import BooleanField, JSONField, CharField
+from django.http import JsonResponse
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets
 from rest_framework.exceptions import NotFound, AuthenticationFailed
@@ -96,3 +101,87 @@ class WishlistModelViewSet(ModelViewSet):
                 return WishlistDeleteSerializers
         except:
             raise AuthenticationFailed
+
+
+def get_filters_values(model_class, fields, excluded_fields):
+
+    select_list = []
+    checkbox_list = []
+
+    for field in fields:
+        field_name = field.name
+
+        if field_name not in excluded_fields:
+            if isinstance(field, BooleanField):
+                checkbox_list.append(field.name)
+            else:
+                excludes = None
+
+                if isinstance(field, JSONField):
+                    # TODO не доделал
+                    empty_q = Q(**{f'{field_name}__exact': '[]'})
+                    excludes = (excludes and (excludes | empty_q)) or empty_q
+                    # TODO на фронте делать мультиселект для таких полей
+                else:
+                    excludes = None
+
+                    null_q = Q(**{f'{field_name}__isnull': True})
+                    excludes = (excludes and (excludes | null_q)) or null_q
+                    if isinstance(field, CharField):
+                        empty_q = Q(**{f'{field_name}__exact': ''})
+                        excludes = (excludes and (excludes | empty_q)) or empty_q
+
+                    pre_excluded_values = model_class.objects.order_by(field_name).values_list(field_name, flat=True) \
+                        .distinct()
+                    values_minus_excluded = pre_excluded_values.exclude(excludes)
+                    values = list(values_minus_excluded)
+
+                    if values:
+                        select = {'product_prop': field.name,
+                                  'name': field.verbose_name,
+                                  'values': values}
+
+                        select_list.append(select)
+
+    filter_variant_list = {
+        'select': select_list,
+        'checkbox': checkbox_list
+    }
+    return filter_variant_list
+
+
+def get_filtered_query_set(model_class, req_query_params):
+    filter_kwargs = []
+
+    for item in req_query_params:
+        # TODO продумать как для related полей делать проверку чтоб добавлять title к ним
+        if item[0] == 'type':
+            filter_kwargs.append(Q(**{f'{item[0]}__title': item[1]}))
+        else:
+            filter_kwargs.append(Q(**{item[0]: item[1]}))
+
+    if filter_kwargs:
+        filtered_query_set = model_class.objects.filter(reduce(lambda a, b: a & b, filter_kwargs))
+    else:
+        filtered_query_set = model_class.objects.all()
+
+    return filtered_query_set
+
+
+def track_fields_values(request):
+    if request.method == 'GET':
+        fields = [f for f in Track._meta.fields]
+        excluded_fields = ['file', 'photo', 'author', 'title', 'price', 'tag_name']
+
+        fields_variant_list = get_filters_values(Track, fields, excluded_fields)
+
+        return JsonResponse(fields_variant_list, safe=False)
+
+
+def track_filtered(request):
+    if request.method == 'GET':
+        query_set = get_filtered_query_set(Track, request.GET.items())
+
+        serializer = TrackSerializers(query_set, many=True)
+
+        return JsonResponse(serializer.data, safe=False)
