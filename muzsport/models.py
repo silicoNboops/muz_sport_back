@@ -208,6 +208,13 @@ class SuggestiveEffect(models.Model):
         verbose_name_plural = 'Суггестивные эффекты'
 
 
+class UnloadingModule(models.Model):
+    direction_effect = models.ForeignKey(DirectionEffect, on_delete=models.CASCADE, verbose_name='Направление воздействия'
+                                                                                    'эффекта')
+    link = models.CharField(null=True, blank=True, max_length=512, verbose_name='Ссылка на файл')
+    file = models.FileField(null=True, blank=True, upload_to="mp4", verbose_name='Дополнительный файл')
+
+
 """
     name = models.CharField(max_length=20, null=True, blank=True, verbose_name='Имя заказчика')
     last_name = models.CharField(max_length=20, null=True, blank=True, verbose_name='Фамилия заказчика')

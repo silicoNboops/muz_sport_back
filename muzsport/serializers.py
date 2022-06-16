@@ -97,6 +97,12 @@ class SuggestiveEffectSerializers(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class UnloadingModuleSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = UnloadingModule
+        fields = '__all__'
+
+
 class WishlistCreateSerializers(serializers.ModelSerializer):
 
     user = serializers.PrimaryKeyRelatedField(read_only=True)

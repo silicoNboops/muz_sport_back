@@ -125,6 +125,11 @@ class SuggestiveEffectViewSet(viewsets.ModelViewSet):
     queryset = SuggestiveEffect.objects.all()
 
 
+class UnloadingModule(viewsets.ModelViewSet):
+    serializer_class = UnloadingModuleSerializers
+    queryset = UnloadingModule.objects.all()
+
+
 class WishlistModelViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated]
 
