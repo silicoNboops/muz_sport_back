@@ -91,6 +91,12 @@ class WishlistSerializers(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class SuggestiveEffectSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = SuggestiveEffect
+        fields = '__all__'
+
+
 class WishlistCreateSerializers(serializers.ModelSerializer):
 
     user = serializers.PrimaryKeyRelatedField(read_only=True)

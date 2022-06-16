@@ -37,6 +37,18 @@ class Tags(models.Model):
         verbose_name_plural = 'Хэштеги'
 
 
+class DirectionEffect(models.Model):
+    direction_effect_name = models.CharField(max_length=64, null=True, blank=True, verbose_name='Направление воздействия'
+                                                                                                'эффекта')
+
+    def __str__(self):
+        return str(self.direction_effect_name)
+
+    class Meta:
+        verbose_name = 'Направление воздействия эффекта'
+        verbose_name_plural = 'Направления воздействий эффектов'
+
+
 class Moods(models.Model):
     mood_name = models.CharField(max_length=30, null=True, blank=True, verbose_name='Настроение')
 
@@ -101,8 +113,8 @@ class Order(models.Model):
                                  verbose_name='Конец хронометража')
     beginning_peak = models.BooleanField(verbose_name='Пик в начале')
     ending = models.BooleanField(verbose_name='Окончание плавное') # плавное или резкое
-    is_auto_layout = models.BooleanField(verbose_name='Автоматическа компоновка?')  # Авто или ручное
-    comment_for_product = models.CharField(max_length=250, verbose_name='Коментарий к продукту', blank=True, null=True)
+    is_auto_layout = models.BooleanField(verbose_name='Автоматическая компоновка?')  # Авто или ручное
+    comment_for_product = models.CharField(max_length=250, verbose_name='Комментарий к продукту', blank=True, null=True)
 
     def __str__(self):
         return str(self.id)
@@ -180,6 +192,20 @@ class Wishlist(models.Model):
 
     def __str__(self):
         return f"{self.user} {self.wished_track}"
+
+
+class SuggestiveEffect(models.Model):
+    athlete_name = models.CharField(max_length=128, blank=True, null=True, verbose_name="Имя спортсмена")
+    direction_effect = models.ForeignKey(DirectionEffect, on_delete=models.CASCADE, verbose_name='Направление воздействия'
+                                                                                                 'эффекта')
+    file = models.FileField(null=True, blank=True, upload_to="mp4", verbose_name='Дополнительный файл')
+
+    def __str__(self):
+        return str(self.athlete_name)
+
+    class Meta:
+        verbose_name = 'Суггестивный эффект'
+        verbose_name_plural = 'Суггестивные эффекты'
 
 
 """

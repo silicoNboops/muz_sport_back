@@ -120,6 +120,11 @@ class AdSmallPhotoFileViewSet(viewsets.ModelViewSet):
     queryset = AdSmallPhotoFile.objects.all()
 
 
+class SuggestiveEffectViewSet(viewsets.ModelViewSet):
+    serializer_class = SuggestiveEffectSerializers
+    queryset = SuggestiveEffect.objects.all()
+
+
 class WishlistModelViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated]
 
