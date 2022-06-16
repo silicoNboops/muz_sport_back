@@ -2,19 +2,6 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
-class MyUser(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name="Пользователь")
-    subscription = models.BooleanField(default=False, verbose_name="Подписан?")
-    subscription_email = models.EmailField(max_length=256, blank=True, null=True, verbose_name="Почта подписки")
-
-    def __str__(self):
-        return str(self.user)
-
-    class Meta:
-        verbose_name = 'Подписка'
-        verbose_name_plural = 'Подписки'
-
-
 class Sports(models.Model):
     sports_name = models.CharField(max_length=30, null=True, blank=True, verbose_name='Наименование спорта')
 
@@ -35,6 +22,19 @@ class Tags(models.Model):
     class Meta:
         verbose_name = 'Хэштег'
         verbose_name_plural = 'Хэштеги'
+
+
+class Subscribe(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name="Пользователь")
+    subscription = models.BooleanField(default=False, verbose_name="Подписан?")
+    subscription_email = models.EmailField(max_length=256, blank=True, null=True, verbose_name="Почта подписки")
+
+    def __str__(self):
+        return str(self.user)
+
+    class Meta:
+        verbose_name = 'Подписка'
+        verbose_name_plural = 'Подписки'
 
 
 class DirectionEffect(models.Model):
@@ -214,6 +214,12 @@ class UnloadingModule(models.Model):
     link = models.CharField(null=True, blank=True, max_length=512, verbose_name='Ссылка на файл')
     file = models.FileField(null=True, blank=True, upload_to="mp4", verbose_name='Дополнительный файл')
 
+    def __str__(self):
+        return str(self.athlete_name)
+
+    class Meta:
+        verbose_name = 'Суггестивный эффект'
+        verbose_name_plural = 'Суггестивные эффекты'
 
 """
     name = models.CharField(max_length=20, null=True, blank=True, verbose_name='Имя заказчика')

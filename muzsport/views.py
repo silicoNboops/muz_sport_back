@@ -86,12 +86,12 @@ class TrackReadOnlyModelViewSet(viewsets.ReadOnlyModelViewSet):
 
 class SubscriptionAPIView(generics.ListCreateAPIView):
     serializer_class = EmailSerializers
-    queryset = MyUser.objects.all()
+    queryset = Subscribe.objects.all()
 
 
 class SubscriptionAPIDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = EmailSerializers
-    queryset = MyUser.objects.all()
+    queryset = Subscribe.objects.all()
 
 
 class CouponsViewSet(viewsets.ModelViewSet):
