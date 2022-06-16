@@ -3,9 +3,16 @@ from django.contrib.auth.models import User
 
 
 class MyUser(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    subscription = models.BooleanField(default=False)
-    subscription_email = models.EmailField(max_length=256, blank=True, null=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name="Пользователь")
+    subscription = models.BooleanField(default=False, verbose_name="Подписан?")
+    subscription_email = models.EmailField(max_length=256, blank=True, null=True, verbose_name="Почта подписки")
+
+    def __str__(self):
+        return str(self.user)
+
+    class Meta:
+        verbose_name = 'Подписка'
+        verbose_name_plural = 'Подписки'
 
 
 class Sports(models.Model):
