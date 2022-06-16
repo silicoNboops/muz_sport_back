@@ -7,6 +7,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets
 from rest_framework.exceptions import NotFound, AuthenticationFailed
 from rest_framework.filters import SearchFilter
+from rest_framework.parsers import JSONParser
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 
@@ -221,3 +222,18 @@ def track_filtered(request):
         serializer = TrackSerializers(query_set, many=True)
 
         return JsonResponse(serializer.data, safe=False)
+
+
+def subscription_email(request):
+    if request.method == 'POST':
+        email_data = JSONParser().parse(request)
+        email_serializer = EmailSerializers(data=email_data)
+
+        if email_serializer.is_valid():
+            email_serializer.save()
+
+    elif request.method == 'GET':
+        subscription = MyUser.objects.all()
+        email_serializer = EmailSerializers(subscription, many=True)
+
+        return JsonResponse(email_serializer.data, safe=False)

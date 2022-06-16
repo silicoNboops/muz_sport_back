@@ -31,7 +31,7 @@ urlpatterns = [
     path('wishlist/delete/', WishlistModelViewSet.as_view({'delete': 'destroy'})),
     path('adbig/', AdBigPhotoFileViewSet.as_view({'get': 'list'})),
     path('adsmall/', AdSmallPhotoFileViewSet.as_view({'get': 'list'})),
-
+    path('subscription/', views.subscription_email),
 ]
 
 if settings.DEBUG:

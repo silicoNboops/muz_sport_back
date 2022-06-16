@@ -107,6 +107,12 @@ class WishlistDeleteSerializers(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class EmailSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = MyUser
+        fields = '__all__'
+
+
 # class ProductListSerializers(serializers.ModelSerializer):
 #     model = Track, Sports, Moods, Tags, Order
 #     fields = '__all__'

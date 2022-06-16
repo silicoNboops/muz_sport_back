@@ -139,6 +139,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'muz_sport_back.urls'
 
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',

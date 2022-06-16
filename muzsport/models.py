@@ -2,6 +2,12 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
+class MyUser(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    subscription = models.BooleanField(default=False)
+    subscription_email = models.EmailField(max_length=256, blank=True, null=True)
+
+
 class Sports(models.Model):
     sports_name = models.CharField(max_length=30, null=True, blank=True, verbose_name='Наименование спорта')
 
