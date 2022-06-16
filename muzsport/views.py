@@ -4,7 +4,7 @@ from django.db.models import Q, ForeignKey
 from django.forms import BooleanField, JSONField, CharField
 from django.http import JsonResponse
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import viewsets
+from rest_framework import viewsets, generics
 from rest_framework.exceptions import NotFound, AuthenticationFailed
 from rest_framework.filters import SearchFilter
 from rest_framework.parsers import JSONParser
@@ -82,6 +82,16 @@ class TrackReadOnlyModelViewSet(viewsets.ReadOnlyModelViewSet):
     def get_serializer_class(self):
         if self.action == 'list':
             return TrackSerializers
+
+
+class SubscriptionAPIView(generics.ListCreateAPIView):
+    serializer_class = EmailSerializers
+    queryset = MyUser.objects.all()
+
+
+class SubscriptionAPIDetailView(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = EmailSerializers
+    queryset = MyUser.objects.all()
 
 
 class CouponsViewSet(viewsets.ModelViewSet):
@@ -224,16 +234,29 @@ def track_filtered(request):
         return JsonResponse(serializer.data, safe=False)
 
 
-def subscription_email(request):
-    if request.method == 'POST':
-        email_data = JSONParser().parse(request)
-        email_serializer = EmailSerializers(data=email_data)
-
-        if email_serializer.is_valid():
-            email_serializer.save()
-
-    elif request.method == 'GET':
-        subscription = MyUser.objects.all()
-        email_serializer = EmailSerializers(subscription, many=True)
-
-        return JsonResponse(email_serializer.data, safe=False)
+# def subscription_email(request):
+#     if request.method == 'POST':
+#         email_data = JSONParser().parse(request)
+#         email_serializer = EmailSerializers(data=email_data)
+#
+#         if email_serializer.is_valid():
+#             email_serializer.save()
+#
+#     elif request.method == 'GET':
+#         subscription = MyUser.objects.all()
+#         email_serializer = EmailSerializers(subscription, many=True)
+#
+#         return JsonResponse(email_serializer.data, safe=False)
+#
+#     elif request.method == 'PUT':
+#         email_data = JSONParser().parse(request)
+#
+#         product = MyUser.objects.get(id=email_data['id'])
+#         product_serializer = EmailSerializers(product, data=email_data)
+#
+#         if product_serializer.is_valid():
+#             product_serializer.save()
+#
+#             return JsonResponse('Type Updated', safe=False)
+#
+#         return JsonResponse('Type to Update', safe=False)
