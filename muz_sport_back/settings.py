@@ -125,6 +125,8 @@ INSTALLED_APPS = [
     'corsheaders',
 ]
 
+AUTH_USER_MODEL = 'muzsport.User'
+
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',

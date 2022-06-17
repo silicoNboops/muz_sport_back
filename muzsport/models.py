@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, AbstractUser
 
 
 class Sports(models.Model):
@@ -24,17 +24,29 @@ class Tags(models.Model):
         verbose_name_plural = 'Хэштеги'
 
 
-class Subscribe(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name="Пользователь")
+# class Subscribe(models.Model):
+#     user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name="Пользователь")
+#     subscription = models.BooleanField(default=False, verbose_name="Подписан?")
+#     subscription_email = models.EmailField(max_length=256, blank=True, null=True, verbose_name="Почта подписки")
+#
+#     def __str__(self):
+#         return str(self.user)
+#
+#     class Meta:
+#         verbose_name = 'Подписка'
+#         verbose_name_plural = 'Подписки'
+
+
+class User(AbstractUser):
     subscription = models.BooleanField(default=False, verbose_name="Подписан?")
     subscription_email = models.EmailField(max_length=256, blank=True, null=True, verbose_name="Почта подписки")
 
     def __str__(self):
-        return str(self.user)
+        return str(self.id)
 
     class Meta:
-        verbose_name = 'Подписка'
-        verbose_name_plural = 'Подписки'
+        verbose_name = 'Пользователь'
+        verbose_name_plural = 'Пользователи'
 
 
 class DirectionEffect(models.Model):
