@@ -119,10 +119,10 @@ class WishlistDeleteSerializers(serializers.ModelSerializer):
         fields = '__all__'
 
 
-# class EmailSerializers(serializers.ModelSerializer):
-#     class Meta:
-#         model = Subscribe
-#         fields = '__all__'
+class EmailSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = 'id', 'subscription', 'subscription_email'
 
 
 # class ProductListSerializers(serializers.ModelSerializer):

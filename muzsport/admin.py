@@ -22,7 +22,6 @@ admin.site.register(Country)
 admin.site.register(OrderSegmentDelete)
 admin.site.register(OrderSegmentAdd)
 admin.site.register(Wishlist)
-# admin.site.register(Subscribe)
 admin.site.register(User)
 
 
