@@ -107,14 +107,7 @@ class Coupons(models.Model):
 
 
 class Order(models.Model):
-    time_begin = models.TimeField(null=True, blank=True, auto_now=False, auto_now_add=False,
-                                   verbose_name='Начало хронометража')
-    time_end = models.TimeField(null=True, blank=True, auto_now=False, auto_now_add=False,
-                                 verbose_name='Конец хронометража')
-    beginning_peak = models.BooleanField(verbose_name='Пик в начале')
-    ending = models.BooleanField(verbose_name='Окончание плавное') # плавное или резкое
-    is_auto_layout = models.BooleanField(verbose_name='Автоматическая компоновка?')  # Авто или ручное
-    comment_for_product = models.CharField(max_length=250, verbose_name='Комментарий к продукту', blank=True, null=True)
+    track = models.ForeignKey(Track, on_delete=models.CASCADE, verbose_name='Трек')
 
     def __str__(self):
         return str(self.id)
@@ -129,6 +122,7 @@ class OrderSegmentDelete(models.Model):
                                          verbose_name='Начало хронометража')
     time_delete_end = models.TimeField(null=True, blank=True, auto_now=False, auto_now_add=False,
                                          verbose_name='Конец хронометража')
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, verbose_name='Заказ')
 
     def __str__(self):
         return str(self.id)
@@ -140,11 +134,12 @@ class OrderSegmentDelete(models.Model):
 
 class OrderSegmentAdd(models.Model):
     time_add_begin = models.TimeField(null=True, blank=True, auto_now=False, auto_now_add=False,
-                                       verbose_name='Начало хронометража')
+                                    verbose_name='Начало хронометража')
     time_add_end = models.TimeField(null=True, blank=True, auto_now=False, auto_now_add=False,
                                      verbose_name='Конец хронометража')
     time_insert = models.TimeField(null=True, blank=True, auto_now=False, auto_now_add=False,
                                     verbose_name='Вставить в')
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, verbose_name='Заказ')
 
     def __str__(self):
         return str(self.id)
@@ -199,6 +194,7 @@ class SuggestiveEffect(models.Model):
     direction_effect = models.ForeignKey(DirectionEffect, on_delete=models.CASCADE, verbose_name='Направление воздействия'
                                                                                                  'эффекта')
     file = models.FileField(null=True, blank=True, upload_to="mp4", verbose_name='Дополнительный файл')
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, verbose_name='Заказ')
 
     def __str__(self):
         return str(self.athlete_name)
@@ -213,6 +209,7 @@ class UnloadingModule(models.Model):
                                                                                     'эффекта')
     link = models.CharField(null=True, blank=True, max_length=512, verbose_name='Ссылка на файл')
     file = models.FileField(null=True, blank=True, upload_to="mp4", verbose_name='Дополнительный файл')
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, verbose_name='Заказ')
 
     def __str__(self):
         return str(self.id)
@@ -221,9 +218,9 @@ class UnloadingModule(models.Model):
         verbose_name = 'Разгрузочный модуль'
         verbose_name_plural = 'Разгрузочный модуль'
 
-"""
-    name = models.CharField(max_length=20, null=True, blank=True, verbose_name='Имя заказчика')
-    last_name = models.CharField(max_length=20, null=True, blank=True, verbose_name='Фамилия заказчика')
-    phone = models.CharField(max_length=30, null=True, blank=True, verbose_name='Номер телефона')
-    email = models.CharField(max_length=256, null=True, blank=True, verbose_name='E-Mail')
-"""
+    '''
+    beginning_peak = models.BooleanField(verbose_name='Пик в начале')
+    ending = models.BooleanField(verbose_name='Окончание плавное') # плавное или резкое
+    is_auto_layout = models.BooleanField(verbose_name='Автоматическая компоновка?')  # Авто или ручное
+    comment_for_product = models.CharField(max_length=250, verbose_name='Комментарий к продукту', blank=True, null=True)
+    '''
