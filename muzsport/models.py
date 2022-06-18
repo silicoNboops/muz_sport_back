@@ -24,25 +24,13 @@ class Tags(models.Model):
         verbose_name_plural = 'Хэштеги'
 
 
-# class Subscribe(models.Model):
-#     user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name="Пользователь")
-#     subscription = models.BooleanField(default=False, verbose_name="Подписан?")
-#     subscription_email = models.EmailField(max_length=256, blank=True, null=True, verbose_name="Почта подписки")
-#
-#     def __str__(self):
-#         return str(self.user)
-#
-#     class Meta:
-#         verbose_name = 'Подписка'
-#         verbose_name_plural = 'Подписки'
-
-
 class User(AbstractUser):
+    phone = models.CharField(max_length=30, null=True, blank=True, verbose_name='Номер телефона')
     subscription = models.BooleanField(default=False, verbose_name="Подписан?")
     subscription_email = models.EmailField(max_length=256, blank=True, null=True, verbose_name="Почта подписки")
 
     def __str__(self):
-        return str(self.id)
+        return str(self.username)
 
     class Meta:
         verbose_name = 'Пользователь'
@@ -227,11 +215,11 @@ class UnloadingModule(models.Model):
     file = models.FileField(null=True, blank=True, upload_to="mp4", verbose_name='Дополнительный файл')
 
     def __str__(self):
-        return str(self.athlete_name)
+        return str(self.id)
 
     class Meta:
-        verbose_name = 'Суггестивный эффект'
-        verbose_name_plural = 'Суггестивные эффекты'
+        verbose_name = 'Разгрузочный модуль'
+        verbose_name_plural = 'Разгрузочный модуль'
 
 """
     name = models.CharField(max_length=20, null=True, blank=True, verbose_name='Имя заказчика')
