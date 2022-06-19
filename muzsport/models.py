@@ -83,6 +83,7 @@ class Track(models.Model):
     mood_name = models.ManyToManyField('Moods', verbose_name='Настроение')
     country_name = models.ForeignKey(Country, on_delete=models.CASCADE, verbose_name='Страна')
     with_words = models.BooleanField(default=False, verbose_name='Со словами?')
+    variants = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, verbose_name='Версии песни')
 
     def __str__(self):
         return f"{self.title}-{self.author}"
