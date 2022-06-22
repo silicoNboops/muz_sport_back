@@ -83,7 +83,7 @@ class Track(models.Model):
     mood_name = models.ManyToManyField('Moods', verbose_name='Настроение')
     country_name = models.ForeignKey(Country, on_delete=models.CASCADE, verbose_name='Страна')
     with_words = models.BooleanField(default=False, verbose_name='Со словами?')
-    variants = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, verbose_name='Версии песни')
+    variants = models.ManyToManyField('self', null=True, blank=True, verbose_name='Версии песни')
 
     def __str__(self):
         return f"{self.title}-{self.author}"
@@ -108,10 +108,15 @@ class Coupons(models.Model):
 
 
 class Order(models.Model):
-    track = models.ForeignKey(Track, on_delete=models.CASCADE, verbose_name='Трек')
+    customer = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Заказчик')
+    track = models.ManyToManyField(Track, verbose_name='Заказ трека')
+    # track_custom = models.ManyToManyField(CustomTrack, verbose_name='Индивидуальный заказ трека')
+    # track_modification = models.ManyToManyField(TrackModification, verbose_name='Доработка трека')
+    time_create = models.DateTimeField(auto_now_add=True, verbose_name='Время оформления')
+    time_update = models.DateTimeField(auto_now=True, verbose_name='Время изменения')
 
     def __str__(self):
-        return str(self.id)
+        return f'{self.customer} - {self.id}'
 
     class Meta:
         verbose_name = 'Заказ'
@@ -150,6 +155,65 @@ class OrderSegmentAdd(models.Model):
         verbose_name_plural = 'Таймеры добавлений'
 
 
+class TrackModification(models.Model):
+    track = models.ForeignKey(Track, on_delete=models.CASCADE, verbose_name='Трек')
+    sports_name = models.ForeignKey(Sports, on_delete=models.CASCADE, verbose_name='Вид спорта')
+    time_start = models.TimeField(verbose_name='Начало хронометража')
+    time_stop = models.TimeField(verbose_name='Конец хронометража')
+    beginning_peak = models.BooleanField(verbose_name='Пик в начале')
+    end = models.BooleanField(verbose_name='Окончание')
+    order_segment_delete = models.ManyToManyField(OrderSegmentDelete, verbose_name='Удаление сегмента')
+    order_segment_add = models.ManyToManyField(OrderSegmentAdd, verbose_name='Добавление сегмента')
+    commentary = models.CharField(max_length=1024, verbose_name='Комментарий к заказу', null=True,
+                                  blank=True)
+
+    def __str__(self):
+        return f'{self.track} : {self.id}'
+
+    class Meta:
+        verbose_name = 'Доработать трек'
+        verbose_name_plural = 'Доработать трек'
+
+
+class CustomTrack(models.Model):
+    sports_name = models.ForeignKey(Sports, on_delete=models.CASCADE, verbose_name='Вид спорта')
+    time_start = models.TimeField(verbose_name='Начало хронометража')
+    time_stop = models.TimeField(verbose_name='Конец хронометража')
+    beginning_peak = models.BooleanField(verbose_name='Пик в начале')
+    end = models.BooleanField(verbose_name='Окончание')
+    link = models.CharField(null=True, blank=True, max_length=512, verbose_name='Ссылка на файл')
+    file = models.FileField(null=True, blank=True, upload_to="mp4", verbose_name='Файл (MP3)')
+    track = models.ForeignKey(Track, on_delete=models.CASCADE, verbose_name='Трек из каталога')
+    order_segment_delete = models.ManyToManyField(OrderSegmentDelete, verbose_name='Удаление сегмента')
+    order_segment_add = models.ManyToManyField(OrderSegmentAdd, verbose_name='Добавление сегмента')
+    commentary = models.CharField(max_length=1024, verbose_name='Комментарий к заказу', null=True,
+                                  blank=True)
+
+    def __str__(self):
+        return f'{self.sports_name} : {self.id}'
+
+    class Meta:
+        verbose_name = 'Индивидуальный трек'
+        verbose_name_plural = 'Индивидуальные треки'
+
+
+class AddTrackToTheProgram(models.Model):
+    link = models.CharField(null=True, blank=True, max_length=512, verbose_name='Ссылка на файл')
+    file = models.FileField(null=True, blank=True, upload_to="mp4", verbose_name='Файл (MP3)')
+    track = models.ForeignKey(Track, on_delete=models.CASCADE, verbose_name='Трек из каталога')
+    order_segment_delete = models.ManyToManyField(OrderSegmentDelete, verbose_name='Удаление сегмента')
+    order_segment_add = models.ManyToManyField(OrderSegmentAdd, verbose_name='Добавление сегмента')
+    commentary = models.CharField(max_length=1024, verbose_name='Комментарий к заказу', null=True,
+                                  blank=True)
+
+    def __str__(self):
+        return f'{self.id}'
+
+    class Meta:
+        verbose_name = 'Добавить трек к программе'
+        verbose_name_plural = 'Добавить трек к программе'
+
+
 class AdBigPhotoFile(models.Model):
     photo = models.ImageField(upload_to='ad_big_photo_images/', height_field=None, width_field=None, verbose_name='Фото')
     ad_period = models.DateField(null=True, blank=True, verbose_name='Срок рекламы')
@@ -182,12 +246,12 @@ class Wishlist(models.Model):
     wished_track = models.ForeignKey(Track, on_delete=models.CASCADE)
 
     class Meta:
-        verbose_name = 'Закладки'
+        verbose_name = 'Закладка'
         verbose_name_plural = 'Закладки'
         unique_together = (('user', 'wished_track'),)
 
     def __str__(self):
-        return f"{self.user} {self.wished_track}"
+        return f"{self.user}: {self.wished_track}"
 
 
 class SuggestiveEffect(models.Model):
@@ -219,9 +283,28 @@ class UnloadingModule(models.Model):
         verbose_name = 'Разгрузочный модуль'
         verbose_name_plural = 'Разгрузочный модуль'
 
-    '''
-    beginning_peak = models.BooleanField(verbose_name='Пик в начале')
-    ending = models.BooleanField(verbose_name='Окончание плавное') # плавное или резкое
-    is_auto_layout = models.BooleanField(verbose_name='Автоматическая компоновка?')  # Авто или ручное
-    comment_for_product = models.CharField(max_length=250, verbose_name='Комментарий к продукту', blank=True, null=True)
-    '''
+
+class PaymentIcons(models.Model):
+    title = models.CharField(verbose_name='Название способа оплаты', max_length=64)
+    icon = models.ImageField(upload_to='payment_icons/', height_field=None, width_field=None, verbose_name='Иконка')
+
+    def __str__(self):
+        return str(self.title)
+
+    class Meta:
+        verbose_name = 'Способы оплаты(иконки)'
+        verbose_name_plural = 'Способы оплаты(иконки)'
+
+
+class Footer(models.Model):
+    year_count_start = models.IntegerField(null=True, default=2021, verbose_name='С какого года')
+    year_count_end = models.IntegerField(null=True, default=2022, verbose_name='По какой год')
+    payment_icons = models.ManyToManyField(PaymentIcons, verbose_name='Способы оплаты')
+    link_icon = models.BooleanField(default=True, verbose_name='Отображение иконки со ссылкой')
+
+    def __str__(self):
+        return str(self.id)
+
+    class Meta:
+        verbose_name = 'Футер'
+        verbose_name_plural = 'Футеры'

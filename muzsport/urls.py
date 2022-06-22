@@ -33,6 +33,9 @@ urlpatterns = [
     path('adsmall/', AdSmallPhotoFileViewSet.as_view({'get': 'list'})),
     path('subscription/', SubscriptionAPIView.as_view()),
     path('subscription/<int:pk>', SubscriptionAPIDetailView.as_view()),
+    path('track/modification/', TrackModificationAPIView.as_view()),
+    path('track/custom/', CustomTrackAPIView.as_view()),
+    path('track/add/', AddTrackToTheProgramAPIView.as_view()),
 
 ]
 

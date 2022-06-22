@@ -110,6 +110,21 @@ class OrderSegmentAddViewSet(viewsets.ModelViewSet):
     queryset = OrderSegmentAdd.objects.all()
 
 
+class TrackModificationAPIView(generics.ListCreateAPIView):
+    serializer_class = TrackModificationSerializers
+    queryset = TrackModification.objects.all()
+
+
+class CustomTrackAPIView(generics.ListCreateAPIView):
+    serializer_class = CustomTrackSerializers
+    queryset = CustomTrack.objects.all()
+
+
+class AddTrackToTheProgramAPIView(generics.ListCreateAPIView):
+    serializer_class = AddTrackToTheProgramSerializers
+    queryset = AddTrackToTheProgram.objects.all()
+
+
 class AdBigPhotoFileViewSet(viewsets.ModelViewSet):
     serializer_class = AdBigPhotoFileSerializers
     queryset = AdBigPhotoFile.objects.all()

@@ -125,6 +125,24 @@ class EmailSerializers(serializers.ModelSerializer):
         fields = 'id', 'subscription', 'subscription_email'
 
 
+class TrackModificationSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = TrackModification
+        fields = '__all__'
+
+
+class CustomTrackSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = CustomTrack
+        fields = '__all__'
+
+
+class AddTrackToTheProgramSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = AddTrackToTheProgram
+        fields = '__all__'
+
+
 # class ProductListSerializers(serializers.ModelSerializer):
 #     model = Track, Sports, Moods, Tags, Order
 #     fields = '__all__'
