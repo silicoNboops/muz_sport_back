@@ -23,6 +23,8 @@ admin.site.register(OrderSegmentDelete)
 admin.site.register(OrderSegmentAdd)
 admin.site.register(Wishlist)
 admin.site.register(User)
+admin.site.register(DirectionMusic)
+
 
 
 

@@ -82,6 +82,8 @@ class TrackReadOnlyModelViewSet(viewsets.ReadOnlyModelViewSet):
     def get_serializer_class(self):
         if self.action == 'list':
             return TrackSerializers
+        elif self.action == 'retrieve':
+            return TrackSerializers
 
 
 class SubscriptionAPIView(generics.ListCreateAPIView):
@@ -243,7 +245,7 @@ def get_filtered_query_set(model_class, req_query_params):
 def track_fields_values(request):
     if request.method == 'GET':
         fields = [f for f in Track._meta.fields]
-        excluded_fields = ['file', 'photo', 'author', 'title', 'price', 'tag_name']
+        excluded_fields = ['id', 'file', 'photo', 'author', 'title', 'price']
 
         fields_variant_list = get_filters_values(Track, fields, excluded_fields)
 
