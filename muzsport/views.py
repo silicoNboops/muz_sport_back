@@ -1,7 +1,7 @@
 from functools import reduce
 
 import django_filters
-from django.db.models import Q, ForeignKey, ManyToManyField
+from django.db.models import Q, ForeignKey, ManyToManyField, F
 from django.forms import BooleanField, JSONField, CharField
 from django.http import JsonResponse
 from django_filters.rest_framework import DjangoFilterBackend
@@ -193,8 +193,6 @@ def get_filters_values(model_class, fields, excluded_fields):
                 excludes = None
 
                 if isinstance(field, ManyToManyField) or isinstance(field, ForeignKey):
-                    print(field_name)
-                    print(type(field))
                     # TODO не доделал
                     empty_q = Q(**{f'{field_name}__isnull': True})
                     excludes = (excludes and (excludes | empty_q)) or empty_q
@@ -214,10 +212,14 @@ def get_filters_values(model_class, fields, excluded_fields):
                     else:
                         new_values = None
 
+                    # print(DirectionMusic.objects.annotate(title=F('direction_music')).values('title', 'id'))
+
                     if new_values:
+                        new_values = list(new_values.annotate(title=F(field_name)).values('title', 'id'))
+
                         select = {'product_prop': field.name,
                                   'name': field.verbose_name,
-                                  'values': list(new_values.values_list(field_name, flat=True))}
+                                  'values': new_values}
 
                         select_list.append(select)
                 else:
