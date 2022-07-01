@@ -20,6 +20,12 @@ class MoodsSerializers(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class DirectionMusicSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DirectionMusic
+        fields = '__all__'
+
+
 class CountrySerializers(serializers.ModelSerializer):
     class Meta:
         model = Country

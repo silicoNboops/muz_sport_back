@@ -50,10 +50,10 @@ class DirectionEffect(models.Model):
 
 
 class DirectionMusic(models.Model):
-    direction_music_name = models.CharField(max_length=64, null=True, blank=True, verbose_name='Направление музыки')
+    direction_music = models.CharField(max_length=64, null=True, blank=True, verbose_name='Направление музыки')
 
     def __str__(self):
-        return str(self.direction_music_name)
+        return str(self.direction_music)
 
     class Meta:
         verbose_name = 'Направление музыки'
@@ -89,9 +89,9 @@ class Track(models.Model):
     title = models.CharField(max_length=150, null=True, blank=True, verbose_name='Название трека')
     price = models.IntegerField(null=True, blank=True, verbose_name='Цена')
     track_length = models.IntegerField(null=True, blank=True, verbose_name='Длительность')
-    direction_music = models.ManyToManyField('DirectionMusic', verbose_name='Направление музыки', related_name='direction_music')
+    direction_music = models.ManyToManyField('DirectionMusic', verbose_name='Направление музыки')
     sports_name = models.ForeignKey(Sports, on_delete=models.CASCADE, verbose_name='Вид спорта')
-    tag_name = models.ManyToManyField('Tags', verbose_name='Хэштег', )
+    tag_name = models.ManyToManyField('Tags', verbose_name='Хэштег', null=True, blank=True)
     mood_name = models.ManyToManyField('Moods', verbose_name='Настроение')
     country_name = models.ForeignKey(Country, on_delete=models.CASCADE, verbose_name='Страна')
     with_words = models.BooleanField(default=False, verbose_name='Со словами?')

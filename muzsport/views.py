@@ -185,8 +185,6 @@ def get_filters_values(model_class, fields, excluded_fields):
 
     for field in fields:
         field_name = field.name
-        print(field_name)
-        print(type(field))
 
         if field_name not in excluded_fields:
             if isinstance(field, BooleanField):
@@ -194,30 +192,32 @@ def get_filters_values(model_class, fields, excluded_fields):
             else:
                 excludes = None
 
-                if isinstance(field, ManyToManyField):
+                if isinstance(field, ManyToManyField) or isinstance(field, ForeignKey):
+                    print(field_name)
+                    print(type(field))
                     # TODO не доделал
                     empty_q = Q(**{f'{field_name}__isnull': True})
                     excludes = (excludes and (excludes | empty_q)) or empty_q
                     # TODO на фронте делать мультиселект для таких полей
-                    print(model_class.objects.order_by(field_name))
                     pre_excluded_values = model_class.objects.order_by(field_name).values_list(field_name, flat=True).distinct()
                     values_minus_excluded = pre_excluded_values.exclude(excludes)
                     values = list(values_minus_excluded)
 
                     if field_name == "direction_music":
-                        new_values = DirectionMusic.objects.filter(pk__in = values)
-                    elif field_name == "tag_name":
-                        new_values = Tags.objects.filter(pk__in = values)
+                        new_values = DirectionMusic.objects.filter(pk__in=values)
                     elif field_name == "mood_name":
-                        new_values = Moods.objects.filter(pk__in = values)
-                    # else:
-                    #     values = new_values
+                        new_values = Moods.objects.filter(pk__in=values)
+                    elif field_name == "sports_name":
+                        new_values = Sports.objects.filter(pk__in=values)
+                    elif field_name == "country_name":
+                        new_values = Country.objects.filter(pk__in=values)
+                    else:
+                        new_values = None
 
-
-                    if values:
+                    if new_values:
                         select = {'product_prop': field.name,
                                   'name': field.verbose_name,
-                                  'values': values}
+                                  'values': list(new_values.values_list(field_name, flat=True))}
 
                         select_list.append(select)
                 else:
@@ -269,7 +269,7 @@ def get_filtered_query_set(model_class, req_query_params):
 def track_fields_values(request):
     if request.method == 'GET':
         fields = [f for f in Track._meta.get_fields() ]
-        excluded_fields = ['id', 'file', 'photo', 'author', 'title', 'price', 'tag_name']
+        excluded_fields = ['id', 'file', 'photo', 'author', 'title', 'price', 'tag_name', 'variants']
 
         fields_variant = get_filters_values(Track, fields, excluded_fields)
 
