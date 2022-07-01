@@ -48,6 +48,9 @@ class TrackSerializers(serializers.ModelSerializer):
         rep = super(TrackSerializers, self).to_representation(instance)
         rep['sports_name'] = instance.sports_name.sports_name
         rep['country_name'] = instance.country_name.country_name
+        rep['direction_music'] = instance.direction_music.all().values_list('direction_music')
+        rep['mood_name'] = instance.mood_name.all().values_list('mood_name')
+        rep['variants'] = instance.variants.all().values_list('variants')
         return rep
 
 
