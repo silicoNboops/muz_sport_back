@@ -88,6 +88,8 @@ class Track(models.Model):
     author = models.CharField(max_length=150, null=True, blank=True, verbose_name='Автор')
     title = models.CharField(max_length=150, null=True, blank=True, verbose_name='Название трека')
     price = models.IntegerField(null=True, blank=True, verbose_name='Цена')
+    # TODO сделать формата 0:00/00:00
+    # TODO задавать дефолтное значение исходя из длины прикрепленного аудио файла
     track_length = models.IntegerField(null=True, blank=True, verbose_name='Длительность')
     direction_music = models.ManyToManyField('DirectionMusic', verbose_name='Направление музыки')
     sports_name = models.ForeignKey(Sports, on_delete=models.CASCADE, verbose_name='Вид спорта')

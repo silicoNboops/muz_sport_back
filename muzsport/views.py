@@ -1,8 +1,7 @@
 from functools import reduce
 
 import django_filters
-from django.db.models import Q, ForeignKey, ManyToManyField, F
-from django.forms import BooleanField, JSONField, CharField
+from django.db.models import Q, ForeignKey, ManyToManyField, F, BooleanField, CharField
 from django.http import JsonResponse
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, generics
@@ -179,7 +178,6 @@ class WishlistModelViewSet(ModelViewSet):
 
 
 def get_filters_values(model_class, fields, excluded_fields):
-
     select_list = []
     checkbox_list = []
 
@@ -188,7 +186,10 @@ def get_filters_values(model_class, fields, excluded_fields):
 
         if field_name not in excluded_fields:
             if isinstance(field, BooleanField):
-                checkbox_list.append(field.name)
+                checkbox_list.append(
+                    {'db_name': field_name,
+                     'verbose_name': field.verbose_name}
+                )
             else:
                 excludes = None
 
@@ -270,7 +271,7 @@ def get_filtered_query_set(model_class, req_query_params):
 
 def track_fields_values(request):
     if request.method == 'GET':
-        fields = [f for f in Track._meta.get_fields() ]
+        fields = [f for f in Track._meta.get_fields()]
         excluded_fields = ['id', 'file', 'photo', 'author', 'title', 'price', 'tag_name', 'variants']
 
         fields_variant = get_filters_values(Track, fields, excluded_fields)
