@@ -192,24 +192,31 @@ class WishlistModelViewSet(ModelViewSet):
             raise AuthenticationFailed
 
 
-def get_filters_values(model_class, fields, excluded_fields):
-    select_list = []
-    checkbox_list = []
+def get_filters_values(model_class, desired_fields, fields):
+    filter_list = {}
 
+    # сперва запускаем цикл по всем полям модельки
     for field in fields:
         field_name = field.name
 
-        if field_name not in excluded_fields:
+        # проходимся только по необходимым для фильтров полям
+        if field_name in desired_fields.values():
+            filter_name_current = None
+
+            # ищем корректное имя для фильтра чтоб передать на фронт
+            for filter_name, desired_field_name in desired_fields.items():
+                if desired_field_name == field_name:
+                    filter_name_current = filter_name
+                    break
+
             if isinstance(field, BooleanField):
-                checkbox_list.append(
-                    {'db_name': field_name,
-                     'verbose_name': field.verbose_name}
-                )
+                filter_list[filter_name_current] = {'type': 'checkbox',
+                                                    'db_name': field_name,
+                                                    'verbose_name': field.verbose_name}
             else:
                 excludes = None
 
                 if isinstance(field, ManyToManyField) or isinstance(field, ForeignKey):
-                    # TODO не доделал
                     empty_q = Q(**{f'{field_name}__isnull': True})
                     excludes = (excludes and (excludes | empty_q)) or empty_q
                     # TODO на фронте делать мультиселект для таких полей
@@ -228,16 +235,13 @@ def get_filters_values(model_class, fields, excluded_fields):
                     else:
                         new_values = None
 
-                    # print(DirectionMusic.objects.annotate(title=F('direction_music')).values('title', 'id'))
-
                     if new_values:
                         new_values = list(new_values.annotate(title=F(field_name)).values('title', 'id'))
 
-                        select = {'product_prop': field.name,
-                                  'name': field.verbose_name,
-                                  'values': new_values}
-
-                        select_list.append(select)
+                        filter_list[filter_name_current] = {'type': 'select',
+                                                            'product_prop': field_name,
+                                                            'name': field.verbose_name,
+                                                            'values': new_values}
                 else:
                     excludes = None
 
@@ -253,17 +257,12 @@ def get_filters_values(model_class, fields, excluded_fields):
                     values = list(values_minus_excluded)
 
                     if values:
-                        select = {'product_prop': field.name,
-                                  'name': field.verbose_name,
-                                  'values': values}
+                        filter_list[filter_name_current] = {'type': 'select',
+                                                            'product_prop': field_name,
+                                                            'name': field.verbose_name,
+                                                            'values': values}
 
-                        select_list.append(select)
-
-    filter_variant_list = {
-        'select': select_list,
-        'checkbox': checkbox_list
-    }
-    return filter_variant_list
+    return filter_list
 
 
 def get_filtered_query_set(model_class, req_query_params):
@@ -287,9 +286,14 @@ def get_filtered_query_set(model_class, req_query_params):
 def track_fields_values(request):
     if request.method == 'GET':
         fields = [f for f in Track._meta.get_fields()]
-        excluded_fields = ['id', 'file', 'photo', 'author', 'title', 'price', 'tag_name', 'variants']
+        filter_field_names = {'sport': 'sports_name',
+                              'len': 'track_length',
+                              'direction': 'direction_music',
+                              'character': 'mood_name',
+                              'words': 'with_words',
+                              'country': 'country_name'}
 
-        fields_variant = get_filters_values(Track, fields, excluded_fields)
+        fields_variant = get_filters_values(Track, filter_field_names, fields)
 
         return JsonResponse(fields_variant, safe=False)
 
