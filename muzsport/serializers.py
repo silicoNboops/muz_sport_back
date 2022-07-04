@@ -26,6 +26,12 @@ class DirectionMusicSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class DirectionEffectSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DirectionEffect
+        fields = '__all__'
+
+
 class CountrySerializers(serializers.ModelSerializer):
     class Meta:
         model = Country

@@ -29,6 +29,17 @@ class MoodsReadOnlyModelViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Track.objects.all()
 
 
+class SportsAPIView(generics.ListCreateAPIView):
+    serializer_class = SportsSerializers
+    queryset = Sports.objects.all()
+
+
+class DirectionEffectAPIView(generics.ListCreateAPIView):
+    serializer_class = DirectionEffectSerializer
+    queryset = DirectionEffect.objects.all()
+
+
+
 class CountryReadOnlyModelViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = TrackSerializers
     queryset = Track.objects.all()

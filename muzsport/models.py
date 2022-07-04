@@ -38,11 +38,11 @@ class User(AbstractUser):
 
 
 class DirectionEffect(models.Model):
-    direction_effect_name = models.CharField(max_length=64, null=True, blank=True, verbose_name='Направление воздействия'
+    direction_effect = models.CharField(max_length=64, null=True, blank=True, verbose_name='Направление воздействия'
                                                                                                 'эффекта')
 
     def __str__(self):
-        return str(self.direction_effect_name)
+        return str(self.direction_effect)
 
     class Meta:
         verbose_name = 'Направление воздействия эффекта'
@@ -83,8 +83,8 @@ class Country(models.Model):
 
 
 class Track(models.Model):
-    file = models.FileField(null=True, blank=True, upload_to="mp4", verbose_name='Трэк')
-    photo = models.ImageField(upload_to='track_images/', height_field=None, width_field=None, verbose_name='Фото')
+    file = models.FileField( upload_to="mp4", verbose_name='Трэк')
+    photo = models.ImageField(upload_to='track_images/',null=True, blank=True, height_field=None, width_field=None, verbose_name='Фото')
     author = models.CharField(max_length=150, null=True, blank=True, verbose_name='Автор')
     title = models.CharField(max_length=150, null=True, blank=True, verbose_name='Название трека')
     price = models.IntegerField(null=True, blank=True, verbose_name='Цена')
