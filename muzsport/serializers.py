@@ -38,7 +38,6 @@ class CountrySerializers(serializers.ModelSerializer):
 
 
 class TrackSerializers(serializers.ModelSerializer):
-    # sports_name = SlugRelatedField(read_only=True, slug_field='name')
 
     class Meta:
         model = Track
@@ -58,6 +57,19 @@ class CouponsSerializers(serializers.ModelSerializer):
     class Meta:
         model = Coupons
         fields = '__all__'
+
+
+class FooterSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = Footer
+        fields = '__all__'
+
+    def to_representation(self, instance):
+        rep = super(FooterSerializers, self).to_representation(instance)
+        # print(instance.payment_icons.all().)
+        rep['payment_icons'] = list(instance.payment_icons.all().values_list('icon', flat=True))
+        # print(rep)
+        return rep
 
 
 class OrderSerializers(serializers.ModelSerializer):

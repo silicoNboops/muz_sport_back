@@ -7,7 +7,6 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, generics
 from rest_framework.exceptions import NotFound, AuthenticationFailed
 from rest_framework.filters import SearchFilter
-from rest_framework.parsers import JSONParser
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 
@@ -84,6 +83,11 @@ class TrackReadOnlyModelViewSet(viewsets.ReadOnlyModelViewSet):
             return TrackSerializers
         elif self.action == 'retrieve':
             return TrackSerializers
+
+
+class FooterAPIDetailView(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = FooterSerializers
+    queryset = Footer.objects.all()
 
 
 class SubscriptionAPIView(generics.ListCreateAPIView):
