@@ -13,6 +13,23 @@ class Sports(models.Model):
         verbose_name_plural = 'Виды спорта'
 
 
+class PriceModificationAndServices(models.Model):
+    price_finished_track = models.IntegerField(max_length=30, verbose_name='Цена доработки трека')
+    price_additional_track = models.IntegerField(max_length=30, verbose_name='Цена добавления трека к программе')
+    price_suggestive_effect = models.IntegerField(max_length=30, verbose_name='Цена суггестивного эффекта')
+    price_unloading_module = models.IntegerField(max_length=30, verbose_name='Цена разгрузочного модуля')
+    sports_programme_min = models.IntegerField(max_length=30, verbose_name='Цена спортивной программы(минимальный тариф)')
+    sports_programme_medium = models.IntegerField(max_length=30, verbose_name='Цена спортивной программы(средний тариф)')
+    sports_programme_max = models.IntegerField(max_length=30, verbose_name='Цена спортивной программы(максимальный тариф)')
+
+    def __str__(self):
+        return str(self.id)
+
+    class Meta:
+        verbose_name = 'Цены доработок и услуг'
+        verbose_name_plural = 'Цены доработок и услуг'
+
+
 class Tags(models.Model):
     tag_name = models.CharField(max_length=30, null=True, blank=True, verbose_name='Хэштег')
 

@@ -19,6 +19,7 @@ urlpatterns = [
     path('moods/<int:pk>/', MoodsReadOnlyModelViewSet.as_view({'get': 'retrieve'})),
     path('direction_effect/', DirectionEffectAPIView.as_view()),
     path('sports_name/', SportsAPIView.as_view()),
+    path('price/', PriceModificationAndServicesAPIView.as_view()),
     path('country/', CountryReadOnlyModelViewSet.as_view({'get': 'list'})),
     path('country/<int:pk>/', CountryReadOnlyModelViewSet.as_view({'get': 'retrieve'})),
     path('order/', OrderViewSet.as_view({'get': 'list'})),

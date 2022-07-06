@@ -26,6 +26,7 @@ admin.site.register(User)
 admin.site.register(DirectionMusic)
 admin.site.register(Footer)
 admin.site.register(PaymentIcons)
+admin.site.register(PriceModificationAndServices)
 
 
 

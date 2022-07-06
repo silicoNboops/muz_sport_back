@@ -38,6 +38,12 @@ class CountrySerializers(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class PriceModificationAndServicesSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = PriceModificationAndServices
+        fields = '__all__'
+
+
 # class ReturnSportsNameSerializer(serializers.RelatedField):
 #     def to_representation(self, field_id):
 #         return field_id.sports_name

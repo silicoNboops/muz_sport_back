@@ -34,6 +34,11 @@ class SportsAPIView(generics.ListCreateAPIView):
     queryset = Sports.objects.all()
 
 
+class PriceModificationAndServicesAPIView(generics.ListCreateAPIView):
+    serializer_class = PriceModificationAndServicesSerializers
+    queryset = PriceModificationAndServices.objects.all()
+
+
 class DirectionEffectAPIView(generics.ListCreateAPIView):
     serializer_class = DirectionEffectSerializer
     queryset = DirectionEffect.objects.all()
