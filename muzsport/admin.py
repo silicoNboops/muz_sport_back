@@ -27,10 +27,6 @@ admin.site.register(DirectionMusic)
 admin.site.register(Footer)
 admin.site.register(PaymentIcons)
 admin.site.register(PriceModificationAndServices)
-
-
-
-
-
-
-
+admin.site.register(TrackModification)
+admin.site.register(DirectionEffect)
+admin.site.register(SuggestiveEffect)
