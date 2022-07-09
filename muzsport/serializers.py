@@ -50,6 +50,8 @@ class PriceModificationAndServicesSerializers(serializers.ModelSerializer):
 
 
 class TrackSerializers(serializers.ModelSerializer):
+    # TODO разобраться с длительностью трека
+    track_length = serializers.TimeField(format='%M:%S', input_formats='%M:%S')
 
     class Meta:
         model = Track
@@ -159,7 +161,29 @@ class EmailSerializers(serializers.ModelSerializer):
         fields = 'id', 'subscription', 'subscription_email'
 
 
-class TrackModificationSerializers(serializers.ModelSerializer):
+class TrackModificationSerializer(serializers.ModelSerializer):
+    # track = TrackSerializers()
+    track = TrackSerializers
+    sports_name = SportsSerializers
+    suggestive_effect = SuggestiveEffectSerializers
+    # order_segment_delete = serializers.ManyRelatedField()
+
+    class Meta:
+        model = TrackModification
+        fields = '__all__'
+
+
+class TrackModificationCreateSerializers(serializers.ModelSerializer):
+    track = serializers.PrimaryKeyRelatedField(read_only=True)
+    sports_name = serializers.PrimaryKeyRelatedField(read_only=True)
+    suggestive_effect = serializers.PrimaryKeyRelatedField(read_only=True)
+
+    class Meta:
+        model = TrackModification
+        fields = '__all__'
+
+
+class TrackModificationDeleteSerializers(serializers.ModelSerializer):
     class Meta:
         model = TrackModification
         fields = '__all__'

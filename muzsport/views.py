@@ -3,10 +3,12 @@ from functools import reduce
 import django_filters
 from django.db.models import Q, ForeignKey, ManyToManyField, F, BooleanField, CharField
 from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, generics
 from rest_framework.exceptions import NotFound, AuthenticationFailed
 from rest_framework.filters import SearchFilter
+from rest_framework.parsers import JSONParser
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 
@@ -58,6 +60,85 @@ class CountryReadOnlyModelViewSet(viewsets.ReadOnlyModelViewSet):
 class OrderViewSet(viewsets.ModelViewSet):
     serializer_class = OrderSerializers
     queryset = Order.objects.all()
+
+
+@csrf_exempt
+def order_api(request):
+    if request.method == 'POST':
+        order_data = JSONParser().parse(request)
+
+        items = order_data.get('items')
+        products_db = []
+
+        for idx, item in enumerate(items):
+            item_id = item.get('id')
+            title = item.get('title')
+            item_quantity = item.get('quantity')
+            item_price = item.get('price')
+
+            # 23:04 пример СМС
+            # product = {'ID товара': item_id,
+            #            'Название товара': title,
+            #            'Количество': item_quantity,
+            #            'Цена': item_price}
+
+            # 23:23 пример СМС
+            product = (f'{idx + 1}) ID товара: {item_id},'
+                       f'\n - Название товара: {title},'
+                       f'\n - Количество: {item_quantity},'
+                       f'\n - Цена: {item_price},'
+                       f'\n - Ссылка на сайте: http://nksgroup33.ru/product/{item_id},'
+                       f'\n - Ссылка в админке: http://nksgroup33.ru:5000/admin/CatalogueApp/product/{item_id}/change/')
+            products_db.append(product)
+
+        order_data.pop('items')
+        # print(products_db)
+        products_db_str = json.dumps(products_db, ensure_ascii=False)
+        order_data['products'] = products_db_str
+        # order_data['products'] = products_db
+
+        # print(products_db_str)
+
+        # TODO сделать парсер чтоб приводить телефон к общему виду
+        # order_client_phone = order_data.pop('phone')
+        # order_client_email = order_data.pop('email')
+        # client = None
+
+        # if order_client_phone or order_client_email:
+        #     client = Client.objects.filter(Q(phone=order_client_phone) | Q(email=order_client_email)).first()
+        #     print(Client.objects.filter(Q(phone=order_client_phone) | Q(email=order_client_email)).query)
+        #
+        # order_data['client'] = client.id
+        # order_name = order_data['name']
+
+
+        order_serializer = OrderSerializer(data=order_data)
+
+
+        if order_serializer.is_valid():
+            saved_order = order_serializer.save()
+            saved_order_id = saved_order.id
+
+            delivery = order_data['delivery']
+            total_price = order_data['price']
+            client = order_data['name']
+            number_phone = order_data['phone']
+            products_formatted = '\n'.join(products_db)
+
+            order_message = (f'Заказ №{saved_order_id}:'
+                             f'\nФИО клиента: {client}.'
+                             f'\nТелефон для связи: {number_phone}'
+                             f'\nСумма заказа: {total_price} ₽'
+                             f'\nСпособ доставки: {delivery}'
+                             f'\nТовары:\n{products_formatted}')
+
+            WhatsAppNotificator().send_message(order_message)
+            # EmailNotificator().send_email(saved_order_id, order_message)
+
+            return JsonResponse('Заказ оформлен', safe=False)
+
+        return JsonResponse('Не удалось оформить заказ', safe=False)
+
 
 
 class TrackReadOnlyModelViewSet(viewsets.ReadOnlyModelViewSet):
@@ -137,9 +218,37 @@ class OrderSegmentAddViewSet(viewsets.ModelViewSet):
     queryset = OrderSegmentAdd.objects.all()
 
 
-class TrackModificationAPIView(generics.ListCreateAPIView):
-    serializer_class = TrackModificationSerializers
-    queryset = TrackModification.objects.all()
+class TrackModificationModelViewSet(viewsets.ModelViewSet):
+    def perform_create(self, serializer):
+        try:
+            print(f'LOL: {self.kwargs}')
+            order = Order.objects.get(id=self.kwargs['pk'])
+            return serializer.save(user=self.request.user, order=order)
+        except:
+            raise NotFound
+
+    def get_queryset(self):
+        # TODO разобраться мб понадобится
+        # if self.action == 'list' or self.action == 'retrieve':
+        #     return TrackModification.objects.filter(order_id=self.request.order.id)
+        # elif self.action == 'post' or self.action == 'destroy':
+        #     return TrackModification.objects.filter(order_id=self.request.order.id)
+
+        return TrackModification.objects.all()
+
+    def get_serializer_class(self):
+        try:
+            if self.action == 'list':
+                return TrackModificationSerializer
+            if self.action == 'retrieve':
+                return TrackModificationSerializer
+            if self.action == 'create':
+                return TrackModificationCreateSerializers
+            elif self.action == 'destroy':
+                return TrackModificationDeleteSerializers
+        # TODO почекать летят ли вообще ошибки
+        except Exception as e:
+            print(e)
 
 
 class CustomTrackAPIView(generics.ListCreateAPIView):
@@ -162,7 +271,7 @@ class AdSmallPhotoFileViewSet(viewsets.ModelViewSet):
     queryset = AdSmallPhotoFile.objects.all()
 
 
-class SuggestiveEffectViewSet(viewsets.ModelViewSet):
+class SuggestiveEffectViewSet(generics.ListCreateAPIView):
     serializer_class = SuggestiveEffectSerializers
     queryset = SuggestiveEffect.objects.all()
 

@@ -14,13 +14,13 @@ class Sports(models.Model):
 
 
 class PriceModificationAndServices(models.Model):
-    price_finished_track = models.IntegerField(max_length=30, verbose_name='Цена доработки трека')
-    price_additional_track = models.IntegerField(max_length=30, verbose_name='Цена добавления трека к программе')
-    price_suggestive_effect = models.IntegerField(max_length=30, verbose_name='Цена суггестивного эффекта')
-    price_unloading_module = models.IntegerField(max_length=30, verbose_name='Цена разгрузочного модуля')
-    sports_programme_min = models.IntegerField(max_length=30, verbose_name='Цена спортивной программы(минимальный тариф)')
-    sports_programme_medium = models.IntegerField(max_length=30, verbose_name='Цена спортивной программы(средний тариф)')
-    sports_programme_max = models.IntegerField(max_length=30, verbose_name='Цена спортивной программы(максимальный тариф)')
+    price_finished_track = models.IntegerField(verbose_name='Цена доработки трека')
+    price_additional_track = models.IntegerField(verbose_name='Цена добавления трека к программе')
+    price_suggestive_effect = models.IntegerField(verbose_name='Цена суггестивного эффекта')
+    price_unloading_module = models.IntegerField(verbose_name='Цена разгрузочного модуля')
+    sports_programme_min = models.IntegerField(verbose_name='Цена спортивной программы(минимальный тариф)')
+    sports_programme_medium = models.IntegerField(verbose_name='Цена спортивной программы(средний тариф)')
+    sports_programme_max = models.IntegerField(verbose_name='Цена спортивной программы(максимальный тариф)')
 
     def __str__(self):
         return str(self.id)
@@ -107,14 +107,15 @@ class Track(models.Model):
     price = models.IntegerField(null=True, blank=True, verbose_name='Цена')
     # TODO сделать формата 0:00/00:00
     # TODO задавать дефолтное значение исходя из длины прикрепленного аудио файла
-    track_length = models.IntegerField(null=True, blank=True, verbose_name='Длительность')
+    # TODO DurationField
+    track_length = models.TimeField(null=True, blank=True, verbose_name='Длительность')
     direction_music = models.ManyToManyField('DirectionMusic', verbose_name='Направление музыки')
     sports_name = models.ForeignKey(Sports, on_delete=models.CASCADE, verbose_name='Вид спорта')
-    tag_name = models.ManyToManyField('Tags', verbose_name='Хэштег', null=True, blank=True)
+    tag_name = models.ManyToManyField('Tags', verbose_name='Хэштег', blank=True)
     mood_name = models.ManyToManyField('Moods', verbose_name='Настроение')
     country_name = models.ForeignKey(Country, on_delete=models.CASCADE, verbose_name='Страна')
     with_words = models.BooleanField(default=False, verbose_name='Со словами?')
-    variants = models.ManyToManyField('self', null=True, blank=True, verbose_name='Версии песни')
+    variants = models.ManyToManyField('self', blank=True, verbose_name='Версии песни')
 
     def __str__(self):
         return f"{self.title}-{self.author}"
@@ -141,13 +142,14 @@ class Coupons(models.Model):
 class Order(models.Model):
     customer = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Заказчик')
     track = models.ManyToManyField(Track, verbose_name='Заказ трека')
-    # track_custom = models.ManyToManyField(CustomTrack, verbose_name='Индивидуальный заказ трека')
-    # track_modification = models.ManyToManyField(TrackModification, verbose_name='Доработка трека')
+    track_custom = models.ManyToManyField('CustomTrack', verbose_name='Индивидуальный заказ трека')
+    track_modification = models.ManyToManyField('TrackModification', verbose_name='Доработка трека',
+                                                related_name='track_modifications')
     time_create = models.DateTimeField(auto_now_add=True, verbose_name='Время оформления')
     time_update = models.DateTimeField(auto_now=True, verbose_name='Время изменения')
 
     def __str__(self):
-        return f'{self.customer} - {self.id}'
+        return f'{self.id}) {self.customer}. {self.time_create} - {self.time_update}'
 
     class Meta:
         verbose_name = 'Заказ'
@@ -187,19 +189,34 @@ class OrderSegmentAdd(models.Model):
 
 
 class TrackModification(models.Model):
+    order = models.ForeignKey(Order, null=True, blank=True, on_delete=models.CASCADE,
+                              verbose_name='Заказ')
     track = models.ForeignKey(Track, on_delete=models.CASCADE, verbose_name='Трек')
     sports_name = models.ForeignKey(Sports, on_delete=models.CASCADE, verbose_name='Вид спорта')
     time_start = models.TimeField(verbose_name='Начало хронометража')
     time_stop = models.TimeField(verbose_name='Конец хронометража')
     beginning_peak = models.BooleanField(verbose_name='Пик в начале')
-    end = models.BooleanField(verbose_name='Окончание')
-    order_segment_delete = models.ManyToManyField(OrderSegmentDelete, verbose_name='Удаление сегмента')
-    order_segment_add = models.ManyToManyField(OrderSegmentAdd, verbose_name='Добавление сегмента')
+    end = models.CharField(choices=(('smooth', 'Плавное'), ('sharp', 'Резкое')), default='smooth',
+                           max_length=20, verbose_name='Окончание')
+    composition = models.CharField(choices=(('auto', 'Авто'), ('manual', 'Ручная')), default='auto',
+                                   max_length=20, verbose_name='Компоновка')
+    order_segment_delete = models.ManyToManyField(OrderSegmentDelete, blank=True,
+                                                  verbose_name='Удаление сегмента')
+    order_segment_add = models.ManyToManyField(OrderSegmentAdd, blank=True,
+                                               verbose_name='Добавление сегмента')
+    # Добавление доп. трека к программе (макс. 2)
+    additional_tracks = models.ManyToManyField('AddTrackToTheProgram', blank=True,
+                                               verbose_name='Доп. треки к программе')
+    suggestive_effect = models.ForeignKey('SuggestiveEffect', null=True, blank=True, on_delete=models.CASCADE,
+                                          verbose_name='Суггестивный эффект')
+    # TODO разгрузочный модуль
     commentary = models.CharField(max_length=1024, verbose_name='Комментарий к заказу', null=True,
                                   blank=True)
+    # оплачен ли по итогу заказ
+    paid = models.BooleanField(default=False, verbose_name='Оплачено')
 
     def __str__(self):
-        return f'{self.track} : {self.id}'
+        return f'{self.id}: {self.track}'
 
     class Meta:
         verbose_name = 'Доработать трек'
@@ -229,11 +246,20 @@ class CustomTrack(models.Model):
 
 
 class AddTrackToTheProgram(models.Model):
+    order = models.ForeignKey(Order, null=True, default=None, on_delete=models.CASCADE,
+                              verbose_name='Заказ')
+    track_modification = models.ForeignKey(TrackModification, null=True, default=None,
+                                           on_delete=models.CASCADE, verbose_name='Доработка трека')
     link = models.CharField(null=True, blank=True, max_length=512, verbose_name='Ссылка на файл')
     file = models.FileField(null=True, blank=True, upload_to="mp4", verbose_name='Файл (MP3)')
-    track = models.ForeignKey(Track, on_delete=models.CASCADE, verbose_name='Трек из каталога')
-    order_segment_delete = models.ManyToManyField(OrderSegmentDelete, verbose_name='Удаление сегмента')
-    order_segment_add = models.ManyToManyField(OrderSegmentAdd, verbose_name='Добавление сегмента')
+    track = models.ForeignKey(Track, null=True, blank=True, on_delete=models.CASCADE,
+                              verbose_name='Трек из каталога')
+    composition = models.CharField(choices=(('auto', 'Авто'), ('manual', 'Ручная')), default='auto',
+                                   max_length=20, verbose_name='Компоновка')
+    order_segment_delete = models.ManyToManyField(OrderSegmentDelete, blank=True,
+                                                  verbose_name='Удаление сегмента')
+    order_segment_add = models.ManyToManyField(OrderSegmentAdd, blank=True,
+                                               verbose_name='Добавление сегмента')
     commentary = models.CharField(max_length=1024, verbose_name='Комментарий к заказу', null=True,
                                   blank=True)
 
@@ -287,13 +313,17 @@ class Wishlist(models.Model):
 
 class SuggestiveEffect(models.Model):
     athlete_name = models.CharField(max_length=128, blank=True, null=True, verbose_name="Имя спортсмена")
-    direction_effect = models.ForeignKey(DirectionEffect, on_delete=models.CASCADE, verbose_name='Направление воздействия'
-                                                                                                 'эффекта')
+    direction_effect = models.ForeignKey(DirectionEffect, on_delete=models.CASCADE,
+                                         verbose_name='Направление воздействия эффекта')
     file = models.FileField(null=True, blank=True, upload_to="mp4", verbose_name='Дополнительный файл')
-    order = models.ForeignKey(Order, on_delete=models.CASCADE, verbose_name='Заказ')
+    link = models.CharField(null=True, blank=True, max_length=512, verbose_name='Ссылка на файл')
+    track_modification = models.ForeignKey(TrackModification, null=True, blank=True,
+                                           on_delete=models.CASCADE, verbose_name='Доработка трека')
+    order = models.ForeignKey(Order, null=True, blank=True, on_delete=models.CASCADE,
+                              verbose_name='Заказ')
 
     def __str__(self):
-        return str(self.athlete_name)
+        return f"{self.id}: {self.athlete_name} для Доработки {self.track_modification}"
 
     class Meta:
         verbose_name = 'Суггестивный эффект'

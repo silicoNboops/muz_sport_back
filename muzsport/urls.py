@@ -40,11 +40,15 @@ urlpatterns = [
     path('subscription/', SubscriptionAPIView.as_view()),
     path('subscription/<int:pk>', SubscriptionAPIDetailView.as_view()),
     path('footer/<int:pk>', FooterAPIDetailView.as_view()),
-    path('track/modification/', TrackModificationAPIView.as_view()),
+
+    path('track/modification/', TrackModificationModelViewSet.as_view({'get': 'list'})),
+    path('track/modification/<int:pk>/', TrackModificationModelViewSet.as_view({'get': 'retrieve'})),
+    path('track/modification/create/', TrackModificationModelViewSet.as_view({'post': 'create'})),
+    path('track/modification/delete/', TrackModificationModelViewSet.as_view({'delete': 'destroy'})),
+
     path('track/custom/', CustomTrackAPIView.as_view()),
     path('track/add/', AddTrackToTheProgramAPIView.as_view()),
-
-
+    path('track/suggestive/', SuggestiveEffectViewSet.as_view()),
 ]
 
 if settings.DEBUG:
