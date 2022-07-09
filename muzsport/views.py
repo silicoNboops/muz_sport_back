@@ -177,10 +177,17 @@ class WishlistModelViewSet(ModelViewSet):
 
     def perform_create(self, serializer):
         try:
-            wished_track = Track.objects.get(id=self.kwargs['pk'])
+            wished_track = Track.objects.get(id=self.request.data.get('id'))
             return serializer.save(user=self.request.user, wished_track=wished_track)
         except:
             raise NotFound
+
+    def destroy(self, serializer):
+        try:
+            instance = self.get_object()
+            self.perform_destroy(instance)
+        except:
+            pass
 
     def get_queryset(self):
         if self.action == 'list' or self.action == 'retrieve':
