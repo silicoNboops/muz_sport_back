@@ -291,13 +291,6 @@ class WishlistModelViewSet(ModelViewSet):
         except:
             raise NotFound
 
-    def destroy(self, serializer):
-        try:
-            instance = self.get_object()
-            self.perform_destroy(instance)
-        except:
-            pass
-
     def get_queryset(self):
         if self.action == 'list' or self.action == 'retrieve':
             return Wishlist.objects.filter(user_id=self.request.user.id)
