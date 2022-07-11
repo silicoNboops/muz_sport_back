@@ -108,7 +108,7 @@ class Track(models.Model):
     # TODO сделать формата 0:00/00:00
     # TODO задавать дефолтное значение исходя из длины прикрепленного аудио файла
     # TODO DurationField
-    track_length = models.TimeField(null=True, blank=True, verbose_name='Длительность')
+    track_length = models.IntegerField(null=True, blank=True, verbose_name='Длительность')
     direction_music = models.ManyToManyField('DirectionMusic', verbose_name='Направление музыки')
     sports_name = models.ForeignKey(Sports, on_delete=models.CASCADE, verbose_name='Вид спорта')
     tag_name = models.ManyToManyField('Tags', verbose_name='Хэштег', blank=True)
