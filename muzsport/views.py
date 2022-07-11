@@ -10,6 +10,7 @@ from rest_framework.exceptions import NotFound, AuthenticationFailed
 from rest_framework.filters import SearchFilter
 from rest_framework.parsers import JSONParser
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
 from muzsport.serializers import *
@@ -290,6 +291,12 @@ class WishlistModelViewSet(ModelViewSet):
             return serializer.save(user=self.request.user, wished_track=wished_track)
         except:
             raise NotFound
+
+    def destroy(self, request, *args, **kwargs):
+        wishlist_obj = self.get_queryset().get(wished_track__pk=int(request.data['track_id']))
+        wishlist_obj.delete()
+
+        return Response({'message': 'Трек удален из избранного'})
 
     def get_queryset(self):
         if self.action == 'list' or self.action == 'retrieve':
