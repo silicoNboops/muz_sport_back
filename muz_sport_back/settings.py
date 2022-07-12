@@ -59,14 +59,6 @@ DJOSER = {
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'ovz1.kupalex.n03kn.vps.myjino.ru', '81.177.165.19']
 
-CSRF_TRUSTED_ORIGINS = ('http://localhost:3000',
-                        'http://localhost:8000',
-                        'http://ovz1.kupalex.n03kn.vps.myjino.ru:8000',
-                        'http://81.177.165.19:8000',
-                        'http://ovz1.kupalex.n03kn.vps.myjino.ru:49192',
-                        'http://ovz1.kupalex.n03kn.vps.myjino.ru'
-)
-
 CORS_ORIGIN_ALLOW_ALL = False
 # CORS_ALLOW_ALL_ORIGINS: True
 
