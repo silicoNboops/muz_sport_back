@@ -58,15 +58,16 @@ DJOSER = {
 }
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'ovz1.kupalex.n03kn.vps.myjino.ru', '81.177.165.19']
+
 CORS_ORIGIN_ALLOW_ALL = False
 # CORS_ALLOW_ALL_ORIGINS: True
 
 # СЮДА ТОЖ НАДО ВПИСЫВАТЬ ИХ
-CORS_ORIGIN_WHITELIST = ('http://localhost:3000', 'http://localhost:8000',
+CORS_ORIGIN_WHITELIST = ['http://localhost:3000', 'http://localhost:8000',
                          'http://ovz1.kupalex.n03kn.vps.myjino.ru:8000',
                          'http://81.177.165.19:8000',
                          'http://ovz1.kupalex.n03kn.vps.myjino.ru:49192',
-                         'http://ovz1.kupalex.n03kn.vps.myjino.ru')
+                         'http://ovz1.kupalex.n03kn.vps.myjino.ru']
 CORS_ALLOW_CREDENTIALS = True
 
 CORS_ALLOW_METHODS = [
@@ -95,7 +96,6 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
         'rest_framework_simplejwt.authentication.JWTAuthentication',
         'rest_framework.authentication.BasicAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
     ],
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
 }
