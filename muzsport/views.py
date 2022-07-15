@@ -294,6 +294,7 @@ class WishlistModelViewSet(ModelViewSet):
 
     def destroy(self, request, *args, **kwargs):
         wishlist_obj = self.get_queryset().get(wished_track__pk=int(request.data['track_id']))
+
         wishlist_obj.delete()
 
         return Response({'message': 'Трек удален из избранного'})

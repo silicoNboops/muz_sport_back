@@ -100,7 +100,7 @@ class Country(models.Model):
 
 
 class Track(models.Model):
-    file = models.FileField( upload_to="mp4", verbose_name='Трэк')
+    file = models.FileField( upload_to="mp4", verbose_name='Трэк', max_length=5000)
     photo = models.ImageField(upload_to='track_images/',null=True, blank=True, height_field=None, width_field=None, verbose_name='Фото')
     author = models.CharField(max_length=150, null=True, blank=True, verbose_name='Автор')
     title = models.CharField(max_length=150, null=True, blank=True, verbose_name='Название трека')

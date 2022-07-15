@@ -51,7 +51,6 @@ class PriceModificationAndServicesSerializers(serializers.ModelSerializer):
 
 class TrackSerializers(serializers.ModelSerializer):
     # TODO разобраться с длительностью трека
-
     class Meta:
         model = Track
         fields = '__all__'
