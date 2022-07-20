@@ -50,25 +50,43 @@ class PriceModificationAndServicesSerializers(serializers.ModelSerializer):
 #         return field_id.sports_name
 
 
-class TrackSerializers(serializers.ModelSerializer):
+# все те же поля, что и для Track, кроме варьиаций
+class TrackVariantsSerializer(serializers.ModelSerializer):
+    direction_music = DirectionMusicSerializer(many=True, read_only=True)
+    mood_name = MoodsSerializers(many=True, read_only=True)
+    tag_name = TagsSerializers(many=True, read_only=True)
+    sports_name = SportsSerializers(read_only=True)
+    country_name = CountrySerializers(read_only=True)
 
-    # direction_music = serializers.PrimaryKeyRelatedField(read_only=True)
-    # mood_name = serializers.PrimaryKeyRelatedField(read_only=True)
+    class Meta:
+        model = Track
+        fields = '__all__'
+
+
+class TrackSerializers(serializers.ModelSerializer):
+    direction_music = DirectionMusicSerializer(many=True, read_only=True)
+    mood_name = MoodsSerializers(many=True, read_only=True)
+    variants = TrackVariantsSerializer(many=True, read_only=True)
+    tag_name = TagsSerializers(many=True, read_only=True)
+    sports_name = SportsSerializers(read_only=True)
+    country_name = CountrySerializers(read_only=True)
 
     # TODO разобраться с длительностью трека
     class Meta:
         model = Track
         fields = '__all__'
 
-    def to_representation(self, instance):
-        rep = super(TrackSerializers, self).to_representation(instance)
-        rep['sports_name'] = instance.sports_name.sports_name
-        rep['country_name'] = instance.country_name.country_name
-        rep['direction_music'] = instance.direction_music.all().values_list('direction_music', flat=True)
-        rep['mood_name'] = list(instance.mood_name.all().values_list('mood_name', flat=True))
-        rep['variants'] = instance.variants.all().values('id', 'title', 'author', 'file',
-                                                         'sports_name', 'country_name')
-        return rep
+    # TODO хуевый метод отображения, можно будет удалить
+    # def to_representation(self, instance):
+    #     rep = super(TrackSerializers, self).to_representation(instance)
+    #     rep['sports_name'] = instance.sports_name.sports_name
+    #     rep['country_name'] = instance.country_name.country_name
+    #     rep['direction_music'] = instance.direction_music.all().values_list('direction_music', flat=True)
+    #     rep['mood_name'] = list(instance.mood_name.all().values_list('mood_name', flat=True))
+    #     rep['variants'] = instance.variants.all().values('id', 'title', 'author', 'file',
+    #                                                      'sports_name', 'country_name', 'direction_music',
+    #                                                      'mood_name')
+    #     return rep
 
 
 class CouponsSerializers(serializers.ModelSerializer):
