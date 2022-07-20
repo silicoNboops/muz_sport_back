@@ -1,3 +1,4 @@
+from django.db.models import F
 from rest_framework import serializers
 from muzsport.models import *
 
@@ -65,7 +66,8 @@ class TrackSerializers(serializers.ModelSerializer):
         rep['country_name'] = instance.country_name.country_name
         rep['direction_music'] = instance.direction_music.all().values_list('direction_music', flat=True)
         rep['mood_name'] = list(instance.mood_name.all().values_list('mood_name', flat=True))
-        rep['variants'] = instance.variants.all().values().annotate(('direction_music'))
+        rep['variants'] = instance.variants.all().values('id', 'title', 'author', 'file',
+                                                         'sports_name', 'country_name')
         return rep
 
 
