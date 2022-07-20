@@ -6,7 +6,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, generics
-from rest_framework.exceptions import NotFound, AuthenticationFailed
+from rest_framework.exceptions import AuthenticationFailed, APIException
 from rest_framework.filters import SearchFilter
 from rest_framework.parsers import JSONParser
 from rest_framework.permissions import IsAuthenticated
@@ -59,8 +59,69 @@ class CountryReadOnlyModelViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class OrderViewSet(viewsets.ModelViewSet):
-    serializer_class = OrderSerializers
-    queryset = Order.objects.all()
+    def perform_create(self, serializer):
+        try:
+            print(self.request.data)
+
+            try:
+                print('lold')
+                order = Order.objects.get(id=self.request.data['order'])
+                print('lol')
+            except Order.DoesNotExist as e:
+                print(type(e))
+                order = None
+
+            try:
+                suggestive = SuggestiveEffect.objects.get(id=self.request.data['order'])
+            except SuggestiveEffect.DoesNotExist as e:
+                suggestive = None
+
+            try:
+                print('q')
+                sport = Sports.objects.get(id=self.request.data['sports_name'])
+                print('qw')
+                # TODO такого не может быть
+            except Sports.DoesNotExist as e:
+                print(type(e))
+                sport = None
+
+            try:
+                track = Track.objects.get(id=self.request.data['track'])
+                # TODO такого не может быть
+            except Track.DoesNotExist as e:
+                print(type(e))
+                track = None
+
+            print(order)
+            return serializer.save(order=order, track=track, sports_name=sport,
+                                   suggestive_effect=suggestive)
+        except Exception as e:
+            print(e)
+            raise APIException
+
+    def get_queryset(self):
+        # TODO разобраться мб понадобится
+        # if self.action == 'list' or self.action == 'retrieve':
+        #     return TrackModification.objects.filter(order_id=self.request.order.id)
+        # elif self.action == 'post' or self.action == 'destroy':
+        #     return TrackModification.objects.filter(order_id=self.request.order.id)
+
+        return Order.objects.all()
+
+    def get_serializer_class(self):
+        try:
+            if self.action == 'list':
+                return OrderSerializer
+            if self.action == 'retrieve':
+                # TODO разобраться поч в админке не отображаются время создания и изменения
+                return OrderSerializer
+            if self.action == 'create':
+                return OrderSerializer
+            elif self.action == 'destroy':
+                return OrderSerializer
+        # TODO почекать летят ли вообще ошибки
+        except Exception as e:
+            print(e)
 
 
 # class VariationsAPIDetailView(generics.RetrieveUpdateDestroyAPIView):
@@ -150,11 +211,7 @@ def order_api(request):
         return JsonResponse('Не удалось оформить заказ', safe=False)
 
 
-
 class TrackReadOnlyModelViewSet(viewsets.ReadOnlyModelViewSet):
-    serializer_class = TrackSerializers
-    queryset = Track.objects.all()
-
     filter_backends = [DjangoFilterBackend, SearchFilter]
     filterset_fields = ['sports_name', 'tag_name', 'mood_name', 'with_words', 'country_name']
     search_fields = ['author', 'title']
@@ -231,11 +288,43 @@ class OrderSegmentAddViewSet(viewsets.ModelViewSet):
 class TrackModificationModelViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         try:
-            print(f'LOL: {self.kwargs}')
-            order = Order.objects.get(id=self.kwargs['pk'])
-            return serializer.save(user=self.request.user, order=order)
-        except:
-            raise NotFound
+            print(self.request.data)
+
+            try:
+                print('lold')
+                order = Order.objects.get(id=self.request.data['order'])
+                print('lol')
+            except Order.DoesNotExist as e:
+                print(type(e))
+                order = None
+
+            try:
+                suggestive = SuggestiveEffect.objects.get(id=self.request.data['order'])
+            except SuggestiveEffect.DoesNotExist as e:
+                suggestive = None
+
+            try:
+                print('q')
+                sport = Sports.objects.get(id=self.request.data['sports_name'])
+                print('qw')
+                # TODO такого не может быть
+            except Sports.DoesNotExist as e:
+                print(type(e))
+                sport = None
+
+            try:
+                track = Track.objects.get(id=self.request.data['track'])
+                # TODO такого не может быть
+            except Track.DoesNotExist as e:
+                print(type(e))
+                track = None
+
+            print(order)
+            return serializer.save(order=order, track=track, sports_name=sport,
+                                   suggestive_effect=suggestive)
+        except Exception as e:
+            print(e)
+            raise APIException
 
     def get_queryset(self):
         # TODO разобраться мб понадобится
