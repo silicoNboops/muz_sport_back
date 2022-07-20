@@ -50,6 +50,10 @@ class PriceModificationAndServicesSerializers(serializers.ModelSerializer):
 
 
 class TrackSerializers(serializers.ModelSerializer):
+
+    # direction_music = serializers.PrimaryKeyRelatedField(read_only=True)
+    # mood_name = serializers.PrimaryKeyRelatedField(read_only=True)
+
     # TODO разобраться с длительностью трека
     class Meta:
         model = Track
@@ -59,9 +63,9 @@ class TrackSerializers(serializers.ModelSerializer):
         rep = super(TrackSerializers, self).to_representation(instance)
         rep['sports_name'] = instance.sports_name.sports_name
         rep['country_name'] = instance.country_name.country_name
-        rep['direction_music'] = list(instance.direction_music.all().values_list('direction_music', flat=True))
+        rep['direction_music'] = instance.direction_music.all().values_list('direction_music', flat=True)
         rep['mood_name'] = list(instance.mood_name.all().values_list('mood_name', flat=True))
-        rep['variants'] = instance.variants.all().values('id', 'title', 'author')
+        rep['variants'] = instance.variants.all().values().annotate(('direction_music'))
         return rep
 
 
@@ -78,9 +82,7 @@ class FooterSerializers(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         rep = super(FooterSerializers, self).to_representation(instance)
-        # print(instance.payment_icons.all().)
         rep['payment_icons'] = list(instance.payment_icons.all().values_list('icon', flat=True))
-        # print(rep)
         return rep
 
 

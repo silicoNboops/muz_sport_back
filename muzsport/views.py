@@ -63,6 +63,15 @@ class OrderViewSet(viewsets.ModelViewSet):
     queryset = Order.objects.all()
 
 
+# class VariationsAPIDetailView(generics.RetrieveUpdateDestroyAPIView):
+#     serializer_class = TrackSerializers
+#
+#     def get_queryset(self):
+#         print(list(Track.objects.filter(id=self.kwargs['pk']).values_list('variants', flat=True)))
+#         variants = list(Track.objects.filter(id=self.kwargs['pk']).values_list('variants', flat=True))
+#         return variants
+
+
 @csrf_exempt
 def order_api(request):
     if request.method == 'POST':
@@ -113,7 +122,7 @@ def order_api(request):
         # order_name = order_data['name']
 
 
-        order_serializer = OrderSerializer(data=order_data)
+        order_serializer = OrderSerializers(data=order_data)
 
 
         if order_serializer.is_valid():

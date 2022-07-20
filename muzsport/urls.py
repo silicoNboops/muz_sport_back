@@ -40,6 +40,7 @@ urlpatterns = [
     path('subscription/', SubscriptionAPIView.as_view()),
     path('subscription/<int:pk>', SubscriptionAPIDetailView.as_view()),
     path('footer/<int:pk>', FooterAPIDetailView.as_view()),
+    # path('variants/<int:pk>', VariationsAPIDetailView.as_view()),
 
     path('track/modification/', TrackModificationModelViewSet.as_view({'get': 'list'})),
     path('track/modification/<int:pk>/', TrackModificationModelViewSet.as_view({'get': 'retrieve'})),
