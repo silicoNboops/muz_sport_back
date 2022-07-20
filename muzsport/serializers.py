@@ -84,9 +84,19 @@ class FooterSerializers(serializers.ModelSerializer):
         return rep
 
 
-class OrderSerializers(serializers.ModelSerializer):
+class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
+        fields = '__all__'
+
+class OrderCreateSerializer(serializers.ModelSerializer):
+    track = serializers.PrimaryKeyRelatedField(read_only=True)
+    sports_name = serializers.PrimaryKeyRelatedField(read_only=True)
+    suggestive_effect = serializers.PrimaryKeyRelatedField(read_only=True)
+    order = serializers.PrimaryKeyRelatedField(read_only=True)
+
+    class Meta:
+        model = TrackModification
         fields = '__all__'
 
 
@@ -174,6 +184,7 @@ class TrackModificationCreateSerializers(serializers.ModelSerializer):
     track = serializers.PrimaryKeyRelatedField(read_only=True)
     sports_name = serializers.PrimaryKeyRelatedField(read_only=True)
     suggestive_effect = serializers.PrimaryKeyRelatedField(read_only=True)
+    order = serializers.PrimaryKeyRelatedField(read_only=True)
 
     class Meta:
         model = TrackModification

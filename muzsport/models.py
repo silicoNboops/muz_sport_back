@@ -141,9 +141,11 @@ class Coupons(models.Model):
 
 class Order(models.Model):
     customer = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Заказчик')
-    track = models.ManyToManyField(Track, verbose_name='Заказ трека')
-    track_custom = models.ManyToManyField('CustomTrack', verbose_name='Индивидуальный заказ трека')
-    track_modification = models.ManyToManyField('TrackModification', verbose_name='Доработка трека',
+    track = models.ManyToManyField(Track, blank=True, verbose_name='Заказ трека')
+    track_custom = models.ManyToManyField('CustomTrack', blank=True,
+                                          verbose_name='Индивидуальный заказ трека')
+    track_modification = models.ManyToManyField('TrackModification', blank=True,
+                                                verbose_name='Доработка трека',
                                                 related_name='track_modifications')
     time_create = models.DateTimeField(auto_now_add=True, verbose_name='Время оформления')
     time_update = models.DateTimeField(auto_now=True, verbose_name='Время изменения')
