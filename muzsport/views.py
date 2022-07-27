@@ -59,9 +59,16 @@ class CountryReadOnlyModelViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class OrderViewSet(viewsets.ModelViewSet):
+
+    def create(self):
+        order = Order.objects.create()
+        order.save()
+        super(OrderViewSet, self).create(order)
+
     def perform_create(self, serializer):
         try:
             print(self.request.data)
+            # time_start = self.request.data['timeStart']
 
             try:
                 print('lold')
@@ -74,7 +81,8 @@ class OrderViewSet(viewsets.ModelViewSet):
             try:
                 suggestive = SuggestiveEffect.objects.get(id=self.request.data['order'])
             except SuggestiveEffect.DoesNotExist as e:
-                suggestive = None
+                # suggestive = None
+                suggestive = SuggestiveEffectSerializers().create(self.request.data['suggestiveEffect'])
 
             try:
                 print('q')
@@ -91,6 +99,14 @@ class OrderViewSet(viewsets.ModelViewSet):
             except Track.DoesNotExist as e:
                 print(type(e))
                 track = None
+
+            # try:
+            #     custom_track = CustomTrack.objects.get(id=self.request.data['order'])
+            #     # TODO такого не может быть
+            # except CustomTrack.DoesNotExist as e:
+            #     print(type(e))
+            #     custom_track = CustomTrackSerializers().create(self.request.data['suggestiveEffect'])
+
 
             print(order)
             return serializer.save(order=order, track=track, sports_name=sport,
@@ -217,6 +233,8 @@ class TrackReadOnlyModelViewSet(viewsets.ReadOnlyModelViewSet):
     search_fields = ['author', 'title']
     filterset_class = TracksFilter
     pagination_class = TracksPagination
+
+
 
     def get_queryset(self):
         # radius = self.request.query_params.get('radius')
