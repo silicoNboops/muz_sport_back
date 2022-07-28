@@ -253,8 +253,6 @@ class TrackReadOnlyModelViewSet(viewsets.ReadOnlyModelViewSet):
     filterset_class = TracksFilter
     pagination_class = TracksPagination
 
-
-
     def get_queryset(self):
         # radius = self.request.query_params.get('radius')
 
@@ -265,11 +263,13 @@ class TrackReadOnlyModelViewSet(viewsets.ReadOnlyModelViewSet):
 
             for item in self.request.query_params.items():
                 # TODO продумать как для related полей делать проверку чтоб добавлять title к ним
-                if not item[0] == 'page':
-                    if item[0] == 'type':
-                        filter_kwargs.append(Q(**{f'{item[0]}__title': item[1]}))
-                    else:
-                        filter_kwargs.append(Q(**{item[0]: item[1]}))
+                if not item[0] == 'search':
+
+                    if not item[0] == 'page':
+                        if item[0] == 'type':
+                            filter_kwargs.append(Q(**{f'{item[0]}__title': item[1]}))
+                        else:
+                            filter_kwargs.append(Q(**{item[0]: item[1]}))
 
             # TODO выводим все (не только опубликованные)
             # filter_kwargs.append(Q(**{'is_published': True}))
@@ -310,7 +310,7 @@ class CouponsViewSet(viewsets.ModelViewSet):
     serializer_class = CouponsSerializers
     queryset = Coupons.objects.all()
     lookup_field = 'coupon_name'
-
+    
 
 class OrderSegmentDeleteViewSet(viewsets.ModelViewSet):
     serializer_class = OrderSegmentDeleteSerializers
