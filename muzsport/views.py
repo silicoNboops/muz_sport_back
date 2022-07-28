@@ -60,57 +60,76 @@ class CountryReadOnlyModelViewSet(viewsets.ReadOnlyModelViewSet):
 
 class OrderViewSet(viewsets.ModelViewSet):
 
-    def create(self):
-        order = Order.objects.create()
-        order.save()
-        super(OrderViewSet, self).create(order)
+    # TODO нахуй
+    # def create(self, request, *args, **kwargs):
+    #     order = Order.objects.create()
+    #     order.save()
+    #     super(OrderViewSet, self).create(order)
 
     def perform_create(self, serializer):
         try:
-            print(self.request.data)
-            # time_start = self.request.data['timeStart']
+            print(f'GOV: {self.request.data}')
 
             try:
-                print('lold')
-                order = Order.objects.get(id=self.request.data['order'])
-                print('lol')
-            except Order.DoesNotExist as e:
+                # print('user:')
+                customer = self.request.user
+                print(customer)
+            except User.DoesNotExist as e:
                 print(type(e))
-                order = None
+                customer = None
 
             try:
-                suggestive = SuggestiveEffect.objects.get(id=self.request.data['order'])
-            except SuggestiveEffect.DoesNotExist as e:
-                # suggestive = None
-                suggestive = SuggestiveEffectSerializers().create(self.request.data['suggestiveEffect'])
-
-            try:
-                print('q')
-                sport = Sports.objects.get(id=self.request.data['sports_name'])
-                print('qw')
-                # TODO такого не может быть
+                # print('sport')
+                sport = Sports.objects.get(id=self.request.data['sport'])
+                print(sport)
             except Sports.DoesNotExist as e:
                 print(type(e))
                 sport = None
 
-            try:
-                track = Track.objects.get(id=self.request.data['track'])
-                # TODO такого не может быть
-            except Track.DoesNotExist as e:
-                print(type(e))
+            suggestive_front = self.request.data.get('suggestiveEffect')
+            if suggestive_front:
+                try:
+                    suggestive = SuggestiveEffect.objects.get(id=suggestive_front)
+                    print(suggestive)
+                except SuggestiveEffect.DoesNotExist as e:
+                    suggestive = None
+            else:
+                suggestive = None
+
+            track_front = self.request.data.get('track')
+            if track_front:
+                try:
+                    track = Track.objects.get(id=track_front)
+                    # TODO такого не может быть
+                except Track.DoesNotExist as e:
+                    print(type(e))
+                    track = None
+            else:
                 track = None
 
-            # try:
-            #     custom_track = CustomTrack.objects.get(id=self.request.data['order'])
-            #     # TODO такого не может быть
-            # except CustomTrack.DoesNotExist as e:
-            #     print(type(e))
-            #     custom_track = CustomTrackSerializers().create(self.request.data['suggestiveEffect'])
+            track_custom_front = self.request.data.get('trackCustom')
+            if track_custom_front:
+                try:
+                    track_custom = CustomTrack.objects.get(id=self.request.data['trackCustom'])
+                except SuggestiveEffect.DoesNotExist as e:
+                    track_custom = None
+            else:
+                track_custom = None
 
+            add_tracks = []
+            additional_tracks_front = self.request.data.get('additionalTracks')
+            if additional_tracks_front:
+                for additional_track_id in additional_tracks_front:
+                    try:
+                        add_track_elem = AddTrackToTheProgram.objects.get(id=additional_track_id)
+                        print(add_track_elem)
+                        add_tracks.append(add_track_elem)
+                    except AddTrackToTheProgram.DoesNotExist as e:
+                        print(type(e))
+                        add_track_elem = None
 
-            print(order)
-            return serializer.save(order=order, track=track, sports_name=sport,
-                                   suggestive_effect=suggestive)
+            return serializer.save(customer=customer, track=track, track_custom=track_custom,
+                                   track_modification=None)
         except Exception as e:
             print(e)
             raise APIException
@@ -132,7 +151,7 @@ class OrderViewSet(viewsets.ModelViewSet):
                 # TODO разобраться поч в админке не отображаются время создания и изменения
                 return OrderSerializer
             if self.action == 'create':
-                return OrderSerializer
+                return OrderCreateSerializer
             elif self.action == 'destroy':
                 return OrderSerializer
         # TODO почекать летят ли вообще ошибки

@@ -119,8 +119,9 @@ class OrderCreateSerializer(serializers.ModelSerializer):
     order = serializers.PrimaryKeyRelatedField(read_only=True)
 
     class Meta:
-        model = TrackModification
+        model = Order
         fields = '__all__'
+        read_only_fields = ('customer',)
 
 
 class OrderSegmentDeleteSerializers(serializers.ModelSerializer):
