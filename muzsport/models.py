@@ -4,6 +4,7 @@ from django.contrib.auth.models import User, AbstractUser
 
 class Sports(models.Model):
     sports_name = models.CharField(max_length=30, null=True, blank=True, verbose_name='Наименование спорта')
+    sports_name_en = models.CharField(max_length=30, null=True, blank=True, verbose_name='Наименование спорта(EN)')
 
     def __str__(self):
         return str(self.sports_name)
@@ -32,6 +33,7 @@ class PriceModificationAndServices(models.Model):
 
 class Tags(models.Model):
     tag_name = models.CharField(max_length=30, null=True, blank=True, verbose_name='Хэштег')
+    tag_name_en = models.CharField(max_length=30, null=True, blank=True, verbose_name='Хэштег(EN)')
 
     def __str__(self):
         return str(self.tag_name)
@@ -57,6 +59,8 @@ class User(AbstractUser):
 class DirectionEffect(models.Model):
     direction_effect = models.CharField(max_length=64, null=True, blank=True, verbose_name='Направление воздействия'
                                                                                                 'эффекта')
+    direction_effect_en = models.CharField(max_length=64, null=True, blank=True, verbose_name='Направление воздействия'
+                                                                                           'эффекта(EN)')
 
     def __str__(self):
         return str(self.direction_effect)
@@ -68,6 +72,7 @@ class DirectionEffect(models.Model):
 
 class DirectionMusic(models.Model):
     direction_music = models.CharField(max_length=64, null=True, blank=True, verbose_name='Направление музыки')
+    direction_music_en = models.CharField(max_length=64, null=True, blank=True, verbose_name='Направление музыки(EN)')
 
     def __str__(self):
         return str(self.direction_music)
@@ -79,6 +84,7 @@ class DirectionMusic(models.Model):
 
 class Moods(models.Model):
     mood_name = models.CharField(max_length=30, null=True, blank=True, verbose_name='Настроение')
+    mood_name_en = models.CharField(max_length=30, null=True, blank=True, verbose_name='Настроение(EN)')
 
     def __str__(self):
         return str(self.mood_name)
@@ -90,6 +96,7 @@ class Moods(models.Model):
 
 class Country(models.Model):
     country_name = models.CharField(max_length=30, null=True, blank=True, verbose_name='Страна')
+    country_name_en = models.CharField(max_length=30, null=True, blank=True, verbose_name='Страна(EN)')
 
     def __str__(self):
         return str(self.country_name)
