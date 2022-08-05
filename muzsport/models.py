@@ -107,8 +107,8 @@ class Country(models.Model):
 
 
 class Track(models.Model):
-    file = models.FileField( upload_to="mp4", verbose_name='Трэк', max_length=5000)
-    photo = models.ImageField(upload_to='track_images/',null=True, blank=True, height_field=None, width_field=None, verbose_name='Фото')
+    file = models.FileField(upload_to="mp4", verbose_name='Трек', max_length=5000)
+    photo = models.ImageField(upload_to='track_images/', null=True, blank=True, height_field=None, width_field=None, verbose_name='Фото')
     author = models.CharField(max_length=150, null=True, blank=True, verbose_name='Автор')
     title = models.CharField(max_length=150, null=True, blank=True, verbose_name='Название трека')
     price = models.IntegerField(null=True, blank=True, verbose_name='Цена')
@@ -149,7 +149,7 @@ class Coupons(models.Model):
 
 class Order(models.Model):
     customer = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Заказчик')
-    track = models.ManyToManyField(Track, blank=True, verbose_name='Заказ трека')
+    track = models.ManyToManyField(Track, blank=True, verbose_name='Трек из каталога')
     track_custom = models.ManyToManyField('CustomTrack', blank=True,
                                           verbose_name='Индивидуальный заказ трека')
     track_modification = models.ManyToManyField('TrackModification', blank=True,
@@ -185,7 +185,7 @@ class OrderSegmentAdd(models.Model):
     time_add_begin = models.TimeField(null=True, blank=True, auto_now=False, auto_now_add=False,
                                     verbose_name='Начало хронометража')
     time_add_end = models.TimeField(null=True, blank=True, auto_now=False, auto_now_add=False,
-                                     verbose_name='Конец хронометража')
+                                    verbose_name='Конец хронометража')
     time_insert = models.TimeField(null=True, blank=True, auto_now=False, auto_now_add=False,
                                     verbose_name='Вставить в')
     order = models.ForeignKey(Order, on_delete=models.CASCADE, verbose_name='Заказ')
