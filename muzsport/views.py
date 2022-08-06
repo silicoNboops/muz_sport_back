@@ -59,8 +59,6 @@ class CountryReadOnlyModelViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class OrderViewSet(viewsets.ModelViewSet):
-
-    # TODO нахуй
     # def create(self, request, *args, **kwargs):
     #     order = Order.objects.create()
     #     order.save()
@@ -488,22 +486,29 @@ def get_filters_values(model_class, desired_fields, fields):
 
                     if field_name == "direction_music":
                         new_values = DirectionMusic.objects.filter(pk__in=values)
+                        values_en = DirectionMusic.objects.values('direction_music_en')
                     elif field_name == "mood_name":
                         new_values = Moods.objects.filter(pk__in=values)
+                        values_en = Moods.objects.values('mood_name_en')
                     elif field_name == "sports_name":
                         new_values = Sports.objects.filter(pk__in=values)
+                        values_en = Sports.objects.values('sports_name_en')
                     elif field_name == "country_name":
                         new_values = Country.objects.filter(pk__in=values)
+                        values_en = Country.objects.values('country_name_en')
                     else:
                         new_values = None
 
                     if new_values:
                         new_values = list(new_values.annotate(title=F(field_name)).values('title', 'id'))
+                        values_en = list(values_en.annotate(title=F(field_name + '_en')).values('title', 'id'))
 
                         filter_list[filter_name_current] = {'type': 'select',
                                                             'product_prop': field_name,
                                                             'name': field.verbose_name,
-                                                            'values': new_values}
+                                                            'values': new_values,
+                                                            'values_en': values_en
+                                                            }
                 else:
                     excludes = None
 
