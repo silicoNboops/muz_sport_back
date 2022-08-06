@@ -101,7 +101,8 @@ class CustomTrackSerializers(serializers.ModelSerializer):
 
 class TrackModificationSerializer(serializers.ModelSerializer):
     # track = TrackSerializers()
-    track = TrackSerializers
+    track = TrackSerializers(read_only=True)
+    # track = TrackSerializers
     sports_name = SportsSerializers
     suggestive_effect = SuggestiveEffectSerializers
     # order_segment_delete = serializers.ManyRelatedField()
