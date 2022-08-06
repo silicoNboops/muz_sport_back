@@ -6,7 +6,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, generics
-from rest_framework.exceptions import AuthenticationFailed, APIException
+from rest_framework.exceptions import AuthenticationFailed, APIException, NotFound
 from rest_framework.filters import SearchFilter
 from rest_framework.parsers import JSONParser
 from rest_framework.permissions import IsAuthenticated
@@ -488,15 +488,19 @@ def get_filters_values(model_class, desired_fields, fields):
                     if field_name == "direction_music":
                         new_values = DirectionMusic.objects.filter(pk__in=values)
                         values_en = DirectionMusic.objects.values('direction_music_en')
+                        name_en = 'Direction music'
                     elif field_name == "mood_name":
                         new_values = Moods.objects.filter(pk__in=values)
                         values_en = Moods.objects.values('mood_name_en')
+                        name_en = 'Mood name'
                     elif field_name == "sports_name":
                         new_values = Sports.objects.filter(pk__in=values)
                         values_en = Sports.objects.values('sports_name_en')
+                        name_en = 'Sports name'
                     elif field_name == "country_name":
                         new_values = Country.objects.filter(pk__in=values)
                         values_en = Country.objects.values('country_name_en')
+                        name_en = 'Country name'
                     else:
                         new_values = None
 
@@ -507,6 +511,7 @@ def get_filters_values(model_class, desired_fields, fields):
                         filter_list[filter_name_current] = {'type': 'select',
                                                             'product_prop': field_name,
                                                             'name': field.verbose_name,
+                                                            'name_en': name_en,
                                                             'values': new_values,
                                                             'values_en': values_en
                                                             }
@@ -523,12 +528,15 @@ def get_filters_values(model_class, desired_fields, fields):
                         .distinct()
                     values_minus_excluded = pre_excluded_values.exclude(excludes)
                     values = list(values_minus_excluded)
-
+                    values_en = list(values_minus_excluded)
+                    name_en = 'Length'
                     if values:
                         filter_list[filter_name_current] = {'type': 'select',
                                                             'product_prop': field_name,
                                                             'name': field.verbose_name,
-                                                            'values': values}
+                                                            'name_en': name_en,
+                                                            'values': values,
+                                                            'values_en': values_en}
 
     return filter_list
 
