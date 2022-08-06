@@ -63,6 +63,12 @@ class TrackVariantsSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class SuggestiveEffectSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = SuggestiveEffect
+        fields = '__all__'
+
+
 class TrackSerializers(serializers.ModelSerializer):
     direction_music = DirectionMusicSerializer(many=True, read_only=True)
     mood_name = MoodsSerializers(many=True, read_only=True)
@@ -87,6 +93,22 @@ class TrackSerializers(serializers.ModelSerializer):
     #                                                      'sports_name', 'country_name', 'direction_music',
     #                                                      'mood_name')
     #     return rep
+class CustomTrackSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = CustomTrack
+        fields = '__all__'
+
+
+class TrackModificationSerializer(serializers.ModelSerializer):
+    # track = TrackSerializers()
+    track = TrackSerializers
+    sports_name = SportsSerializers
+    suggestive_effect = SuggestiveEffectSerializers
+    # order_segment_delete = serializers.ManyRelatedField()
+
+    class Meta:
+        model = TrackModification
+        fields = '__all__'
 
 
 class CouponsSerializers(serializers.ModelSerializer):
@@ -106,7 +128,10 @@ class FooterSerializers(serializers.ModelSerializer):
         return rep
 
 
-class OrderSerializer(serializers.ModelSerializer):\
+class OrderSerializer(serializers.ModelSerializer):
+    track = TrackSerializers(many=True, read_only=True)
+    track_custom = CustomTrackSerializers(many=True, read_only=True)
+    track_modification = TrackModificationSerializer(many=True, read_only=True)
 
     class Meta:
         model = Order
@@ -159,12 +184,6 @@ class WishlistSerializers(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class SuggestiveEffectSerializers(serializers.ModelSerializer):
-    class Meta:
-        model = SuggestiveEffect
-        fields = '__all__'
-
-
 class UnloadingModuleSerializers(serializers.ModelSerializer):
     class Meta:
         model = UnloadingModule
@@ -193,18 +212,6 @@ class EmailSerializers(serializers.ModelSerializer):
         fields = 'id', 'subscription', 'subscription_email'
 
 
-class TrackModificationSerializer(serializers.ModelSerializer):
-    # track = TrackSerializers()
-    track = TrackSerializers
-    sports_name = SportsSerializers
-    suggestive_effect = SuggestiveEffectSerializers
-    # order_segment_delete = serializers.ManyRelatedField()
-
-    class Meta:
-        model = TrackModification
-        fields = '__all__'
-
-
 class TrackModificationCreateSerializers(serializers.ModelSerializer):
     track = serializers.PrimaryKeyRelatedField(read_only=True)
     sports_name = serializers.PrimaryKeyRelatedField(read_only=True)
@@ -219,12 +226,6 @@ class TrackModificationCreateSerializers(serializers.ModelSerializer):
 class TrackModificationDeleteSerializers(serializers.ModelSerializer):
     class Meta:
         model = TrackModification
-        fields = '__all__'
-
-
-class CustomTrackSerializers(serializers.ModelSerializer):
-    class Meta:
-        model = CustomTrack
         fields = '__all__'
 
 
