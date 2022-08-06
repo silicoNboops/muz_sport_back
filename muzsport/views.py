@@ -133,13 +133,14 @@ class OrderViewSet(viewsets.ModelViewSet):
             raise APIException
 
     def get_queryset(self):
-        # TODO разобраться мб понадобится
+        if self.action == 'list' or self.action == 'retrieve':
+            return Order.objects.filter(customer_id=self.request.user.id)
         # if self.action == 'list' or self.action == 'retrieve':
         #     return TrackModification.objects.filter(order_id=self.request.order.id)
         # elif self.action == 'post' or self.action == 'destroy':
         #     return TrackModification.objects.filter(order_id=self.request.order.id)
 
-        return Order.objects.all()
+        # return Order.objects.all()
 
     def get_serializer_class(self):
         try:
