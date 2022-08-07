@@ -527,8 +527,8 @@ def get_filters_values(model_class, desired_fields, fields):
                     pre_excluded_values = model_class.objects.order_by(field_name).values_list(field_name, flat=True) \
                         .distinct()
                     values_minus_excluded = pre_excluded_values.exclude(excludes)
-                    values = list(values_minus_excluded)
-                    values_en = list(values_minus_excluded)
+                    values = list(values_minus_excluded.annotate(title=F('track_length')).values('id', 'title'))
+                    values_en = list(values_minus_excluded.annotate(title=F('track_length')).values('id', 'title'))
                     name_en = 'Length'
                     if values:
                         filter_list[filter_name_current] = {'type': 'select',
